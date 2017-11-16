@@ -28,3 +28,5 @@ script:
   - if [[ $EXECUTE_COVERAGE == 'true' ]]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-text --coverage-clover=./build/logs/clover.xml ; fi
   - if [[ $EXECUTE_COVERAGE != 'true' ]]; then ./vendor/bin/phpunit ; fi
 
+after_script:
+  - if [[ $EXECUTE_COVERAGE == 'true' ]]; then ./vendor/bin/ocular code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
