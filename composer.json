@@ -1,0 +1,43 @@
+{
+  "name": "z-ee/date-range",
+  "description": "Date range implementation",
+  "license": "BSD-2-Clause",
+  "keywords": [
+    "date range"
+  ],
+  "authors": [
+    {
+      "name": "Veaceslav Medvedev",
+      "email": "slavcopost@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.4.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zee\\DateRange\\": ["src/"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Zee\\DateRange\\": ["tests/"]
+    }
+  },
+  "scripts": {
+    "check": [
+      "@test"
+    ],
+    "test": "phpunit",
+    "test-coverage": "phpunit --coverage-clover build/logs/clover.xml",
+    "show-coverage": "phpunit --coverage-clover build/logs/clover.xml --coverage-text=php://stdout"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
+}
