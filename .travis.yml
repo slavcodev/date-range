@@ -1,0 +1,30 @@
+sudo: false
+
+language: php
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.0
+    - php: 7.1
+      env:
+        - EXECUTE_COVERAGE=true
+  allow_failures:
+    - php: 7.0
+
+notifications:
+  email: false
+
+before_install:
+  - phpenv config-rm xdebug.ini || return 0
+  - mkdir -p ./build/logs || return 0
+
+install:
+  - composer self-update
+  - composer install --no-interaction --prefer-source
+
+script:
+  # PHPUnit
+  - if [[ $EXECUTE_COVERAGE == 'true' ]]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-text --coverage-clover=./build/logs/clover.xml ; fi
+  - if [[ $EXECUTE_COVERAGE != 'true' ]]; then ./vendor/bin/phpunit ; fi
+
