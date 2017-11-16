@@ -12,6 +12,7 @@ namespace Zee\DateRange;
 
 use DateTime;
 use DateTimeImmutable;
+use DomainException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -48,5 +49,40 @@ class DateRangeImmutableTest extends TestCase
 
         self::assertNotSame($initial, $actual);
         self::assertSame($soon, $actual->getEnd());
+    }
+
+    /**
+     * @test
+     */
+    public function checkImmutableCopyMutableObjectBehaviors()
+    {
+        $yesterday = new DateTime('-1 day');
+        $tomorrow = new DateTime('+1 day');
+
+        $immutable = new DateRangeImmutable($yesterday, $tomorrow);
+        $mutable = new DateRange($yesterday, $tomorrow);
+
+        self::assertSame((string) $mutable, (string) $immutable);
+        self::assertSame(json_encode($mutable), json_encode($immutable));
+        self::assertSame($mutable->__debugInfo(), $immutable->__debugInfo());
+
+        $immutable = unserialize(serialize($immutable));
+        $mutable = unserialize(serialize($mutable));
+
+        self::assertEquals($mutable->getBegin(), $immutable->getBegin());
+        self::assertEquals($mutable->getEnd(), $immutable->getEnd());
+    }
+
+    /**
+     * @test
+     */
+    public function handleInvalidSerializedValue()
+    {
+        $range = new DateRangeImmutable(new DateTime());
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid range format');
+
+        $range->unserialize('');
     }
 }

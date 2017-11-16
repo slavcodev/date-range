@@ -12,11 +12,13 @@ namespace Zee\DateRange;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use JsonSerializable;
+use Serializable;
 
 /**
  * Date range implementation.
  */
-final class DateRange implements DateRangeInterface
+final class DateRange implements DateRangeInterface, Serializable, JsonSerializable
 {
     /**
      * @var DateTimeInterface
@@ -38,6 +40,27 @@ final class DateRange implements DateRangeInterface
 
         $this->begin = $begin;
         $this->end = $end;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->serialize();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __debugInfo()
+    {
+        return [
+            'begin' => $this->getBegin()->format('c'),
+            'end' => $this->isFinite()
+                ? $this->getEnd()->format('c')
+                : '-',
+        ];
     }
 
     /**
@@ -118,6 +141,46 @@ final class DateRange implements DateRangeInterface
         $this->end = $time;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return sprintf(
+            '%s/%s',
+            $this->getBegin()->format('c'),
+            $this->isFinite()
+                ? $this->getEnd()->format('c')
+                : '-'
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        $times = explode('/', $serialized, 2);
+
+        if (count($times) !== 2) {
+            throw new DateRangeException('Invalid range format');
+        }
+
+        $this->begin = new DateTimeImmutable($times[0]);
+
+        if ($times[1] !== '-') {
+            $this->end = new DateTimeImmutable($times[1]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return $this->serialize();
     }
 
     /**

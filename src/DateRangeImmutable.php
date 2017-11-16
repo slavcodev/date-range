@@ -10,7 +10,10 @@
 
 namespace Zee\DateRange;
 
+use DateTimeImmutable;
 use DateTimeInterface;
+use JsonSerializable;
+use Serializable;
 
 /**
  * Immutable implementation of date range.
@@ -18,7 +21,7 @@ use DateTimeInterface;
  * This class behaves the same as `{@see DateRange}`
  * except it never modifies itself but returns a new object instead.
  */
-final class DateRangeImmutable implements DateRangeInterface
+final class DateRangeImmutable implements DateRangeInterface, Serializable, JsonSerializable
 {
     /**
      * @var DateRange
@@ -32,6 +35,22 @@ final class DateRangeImmutable implements DateRangeInterface
     public function __construct(DateTimeInterface $begin, DateTimeInterface $end = null)
     {
         $this->storage = new DateRange($begin, $end);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->storage->__toString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __debugInfo()
+    {
+        return $this->storage->__debugInfo();
     }
 
     /**
@@ -118,5 +137,40 @@ final class DateRangeImmutable implements DateRangeInterface
         $clone->storage->endAt($time);
 
         return $clone;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return $this->storage->serialize();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        $times = explode('/', $serialized, 2);
+
+        if (count($times) !== 2) {
+            throw new DateRangeException('Invalid range format');
+        }
+
+        $this->storage = new DateRange(
+            new DateTimeImmutable($times[0]),
+            $times[1] !== '-'
+                ? new DateTimeImmutable($times[1])
+                : null
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return $this->storage->jsonSerialize();
     }
 }
