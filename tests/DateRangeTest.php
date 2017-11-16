@@ -25,11 +25,11 @@ class DateRangeTest extends TestCase
      */
     public function initInfiniteRange()
     {
-        $period = new DateRange(new DateTime());
+        $range = new DateRange(new DateTime());
 
-        self::assertFalse($period->isFinite());
-        self::assertTrue($period->isStarted());
-        self::assertFalse($period->isEnded());
+        self::assertFalse($range->isFinite());
+        self::assertTrue($range->isStarted());
+        self::assertFalse($range->isEnded());
     }
 
     /**
@@ -39,12 +39,12 @@ class DateRangeTest extends TestCase
     {
         $soon = new DateTimeImmutable('+1 day');
         $nextMonth = new DateTimeImmutable('+1 month');
-        $period = new DateRange($soon, $nextMonth);
+        $range = new DateRange($soon, $nextMonth);
 
-        self::assertFalse($period->isStarted());
-        self::assertTrue($period->isFinite());
-        self::assertFalse($period->isEnded());
-        self::assertTrue($period->isEndAt($nextMonth));
+        self::assertFalse($range->isStarted());
+        self::assertTrue($range->isFinite());
+        self::assertFalse($range->isEnded());
+        self::assertTrue($range->isEndAt($nextMonth));
     }
 
     /**
@@ -56,15 +56,15 @@ class DateRangeTest extends TestCase
     {
         $justNow = new DateTimeImmutable('-1 second');
         $yesterday = new DateTimeImmutable('-1 day');
-        $period = new DateRange($yesterday, $justNow);
+        $range = new DateRange($yesterday, $justNow);
 
-        self::assertTrue($period->isStarted());
-        self::assertTrue($period->isFinite());
-        self::assertTrue($period->isEnded());
-        self::assertSame($yesterday, $period->getBegin());
-        self::assertSame($justNow, $period->getEnd());
+        self::assertTrue($range->isStarted());
+        self::assertTrue($range->isFinite());
+        self::assertTrue($range->isEnded());
+        self::assertSame($yesterday, $range->getBegin());
+        self::assertSame($justNow, $range->getEnd());
 
-        return $period;
+        return $range;
     }
 
     /**
@@ -73,11 +73,11 @@ class DateRangeTest extends TestCase
     public function useBackdatingBegin()
     {
         $justNow = new DateTimeImmutable('-1 second');
-        $period = new DateRange($justNow);
+        $range = new DateRange($justNow);
 
-        self::assertTrue($period->isStarted());
-        self::assertFalse($period->isEnded());
-        self::assertSame($justNow, $period->getBegin());
+        self::assertTrue($range->isStarted());
+        self::assertFalse($range->isEnded());
+        self::assertSame($justNow, $range->getBegin());
     }
 
     /**
@@ -115,13 +115,13 @@ class DateRangeTest extends TestCase
     public function useFutureBegin() : DateRange
     {
         $soon = new DateTimeImmutable('+1 day');
-        $period = new DateRange($soon);
+        $range = new DateRange($soon);
 
-        self::assertFalse($period->isStarted());
-        self::assertFalse($period->isEnded());
-        self::assertTrue($period->isbeginAt($soon));
+        self::assertFalse($range->isStarted());
+        self::assertFalse($range->isEnded());
+        self::assertTrue($range->isbeginAt($soon));
 
-        return $period;
+        return $range;
     }
 
     /**
@@ -132,16 +132,16 @@ class DateRangeTest extends TestCase
      */
     public function changeBegin(DateRange $initial)
     {
-        $period = $initial->beginAt($initial->getBegin());
+        $range = $initial->beginAt($initial->getBegin());
 
-        self::assertSame($initial->getBegin(), $period->getBegin());
+        self::assertSame($initial->getBegin(), $range->getBegin());
 
         $nextMonth = new DateTimeImmutable('+1 month');
-        $period = $initial->beginAt($nextMonth);
+        $range = $initial->beginAt($nextMonth);
 
-        self::assertFalse($period->isStarted());
-        self::assertFalse($period->isEnded());
-        self::assertSame($nextMonth, $period->getBegin());
+        self::assertFalse($range->isStarted());
+        self::assertFalse($range->isEnded());
+        self::assertSame($nextMonth, $range->getBegin());
     }
 
     /**
@@ -163,5 +163,67 @@ class DateRangeTest extends TestCase
         self::assertTrue($period->isStarted());
         self::assertFalse($period->isEnded());
         self::assertSame($nextMonth, $period->getEnd());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideDateRanges
+     *
+     * @param DateRange $initial
+     */
+    public function serializeRange(DateRange $initial)
+    {
+        $actual = unserialize(serialize($initial));
+
+        if ($actual instanceof DateRange) {
+            self::assertTrue($actual->isBeginAt($initial->getBegin()));
+
+            if ($initial->isFinite()) {
+                self::assertTrue($actual->isEndAt($initial->getEnd()));
+            }
+        } else {
+            self::fail('Cannot serialize/deserialize date range');
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function handleInvalidSerializedValue()
+    {
+        $range = new DateRange(new DateTime());
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid range format');
+
+        $range->unserialize('');
+    }
+
+    /**
+     * @test
+     * @dataProvider provideDateRanges
+     *
+     * @param DateRange $range
+     */
+    public function jsonEncodeRange(DateRange $range)
+    {
+        $expected = json_encode((string) $range);
+        $actual = json_encode($range);
+
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideDateRanges(): array
+    {
+        $now = new DateTimeImmutable();
+        $soon = new DateTimeImmutable('+1 day');
+
+        return [
+            [new DateRange($now)],
+            [new DateRange($now, $soon)],
+        ];
     }
 }
