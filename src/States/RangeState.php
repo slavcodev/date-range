@@ -57,26 +57,26 @@ interface RangeState extends JsonSerializable
     public function setEndTime(DateTimeInterface $time): RangeState;
 
     /**
+     * Compares start time with specific time.
+     *
+     * Returns 0 if times are equals, negative if start time is less than given time,
+     * and positive if start time is greater.
+     *
      * @param DateTimeInterface $time
      *
-     * @return bool
+     * @return int
      */
-    public function isStartAt(DateTimeInterface $time): bool;
+    public function compareStartTime(DateTimeInterface $time): int;
 
     /**
+     * Compares end time with specific time.
+     *
+     * Returns 0 if times are equals, negative if end time is less than given time
+     * and positive if end time is greater.
+     *
      * @param DateTimeInterface $time
      *
-     * @return bool
+     * @return int
      */
-    public function isEndAt(DateTimeInterface $time): bool;
-
-    /**
-     * @return bool
-     */
-    public function isStarted(): bool;
-
-    /**
-     * @return bool
-     */
-    public function isEnded(): bool;
+    public function compareEndTime(DateTimeInterface $time): int;
 }

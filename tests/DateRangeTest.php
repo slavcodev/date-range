@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use DomainException;
 use PHPUnit\Framework\TestCase;
+use Zee\DateRange\States\UndefinedRange;
 
 /**
  * Class DateRangeTest.
@@ -59,7 +60,7 @@ class DateRangeTest extends TestCase
         $actual = new DateRange();
 
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Date range is undefined');
+        $this->expectExceptionMessage('Range start is undefined');
 
         $actual->getStartTime();
     }
@@ -72,9 +73,35 @@ class DateRangeTest extends TestCase
         $actual = new DateRange();
 
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Date range is undefined');
+        $this->expectExceptionMessage('Range end is undefined');
 
         $actual->getEndTime();
+    }
+
+    /**
+     * @test
+     */
+    public function cannotCompareUndefinedStart()
+    {
+        $actual = new UndefinedRange();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Range start is undefined');
+
+        $actual->compareStartTime(new DateTimeImmutable());
+    }
+
+    /**
+     * @test
+     */
+    public function cannotCompareUndefinedEnd()
+    {
+        $actual = new UndefinedRange();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Range end is undefined');
+
+        $actual->compareEndTime(new DateTimeImmutable());
     }
 
     /**
@@ -120,7 +147,7 @@ class DateRangeTest extends TestCase
         $actual = new DateRange($now);
 
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Date range is undefined');
+        $this->expectExceptionMessage('Range end is undefined');
 
         $actual->getEndTime();
     }
@@ -137,7 +164,7 @@ class DateRangeTest extends TestCase
         self::assertFalse($actual->hasStartTime());
         self::assertTrue($actual->hasEndTime());
         self::assertTrue($actual->isStarted());
-        self::assertTrue($actual->isEnded());
+        self::assertFalse($actual->isEnded());
         self::assertFalse($actual->isStartAt($now));
         self::assertTrue($actual->isEndAt($now));
         self::assertFalse($actual->isEndAt($yesterday));
@@ -151,6 +178,7 @@ class DateRangeTest extends TestCase
 
         self::assertNotSame($actual, $changed);
         self::assertSame($yesterday, $changed->getEndTime());
+        self::assertTrue($changed->isEnded());
 
         $changed = $actual->setStartTime($yesterday);
 
@@ -168,7 +196,7 @@ class DateRangeTest extends TestCase
         $actual = new DateRange(null, $now);
 
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Date range is undefined');
+        $this->expectExceptionMessage('Range start is undefined');
 
         $actual->getStartTime();
     }
