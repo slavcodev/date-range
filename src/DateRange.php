@@ -10,44 +10,48 @@
 
 namespace Zee\DateRange;
 
-use DateTimeImmutable;
 use DateTimeInterface;
 use JsonSerializable;
-use Serializable;
+use Zee\DateRange\States\RangeState;
+use Zee\DateRange\States\UndefinedRange;
 
 /**
- * Date range implementation.
+ * Implementation of date range value object.
  */
-final class DateRange implements DateRangeInterface, Serializable, JsonSerializable
+final class DateRange implements DateRangeInterface, JsonSerializable
 {
     /**
-     * @var DateTimeInterface
+     * @var RangeState
      */
-    private $begin;
+    private $state;
 
     /**
-     * @var DateTimeInterface
+     * @param DateTimeInterface|null $startTime
+     * @param DateTimeInterface|null $endTime
      */
-    private $end;
-
-    /**
-     * @param DateTimeInterface $begin
-     * @param DateTimeInterface $end
-     */
-    public function __construct(DateTimeInterface $begin, DateTimeInterface $end = null)
+    public function __construct(DateTimeInterface $startTime = null, DateTimeInterface $endTime = null)
     {
-        $this->guardDateSequence($begin, $end);
+        $state = new UndefinedRange();
 
-        $this->begin = $begin;
-        $this->end = $end;
+        if (isset($startTime)) {
+            $state = $state->setStartTime($startTime);
+        }
+
+        if (isset($endTime)) {
+            $state = $state->setEndTime($endTime);
+        }
+
+        $this->state = $state;
     }
 
     /**
+     * Returns string representation of range.
+     *
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->serialize();
+        return (string) $this->state;
     }
 
     /**
@@ -56,43 +60,87 @@ final class DateRange implements DateRangeInterface, Serializable, JsonSerializa
     public function __debugInfo()
     {
         return [
-            'begin' => $this->getBegin()->format('c'),
-            'end' => $this->isFinite()
-                ? $this->getEnd()->format('c')
-                : '-',
+            'startTime' => $this->state->hasStartTime()
+                ? $this->state->getStartTime()
+                : null,
+            'endTime' => $this->state->hasEndTime()
+                ? $this->state->getEndTime()
+                : null,
         ];
     }
 
     /**
+     * Returns value ready to be encoded as JSON.
+     *
+     * The ISO-8601 range format is used for times.
+     *
      * {@inheritdoc}
      */
-    public function getBegin(): DateTimeInterface
+    public function jsonSerialize(): array
     {
-        return $this->begin;
+        return $this->state->jsonSerialize();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getEnd(): DateTimeInterface
+    public function hasStartTime(): bool
     {
-        return $this->end;
+        return $this->state->hasStartTime();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isFinite(): bool
+    public function hasEndTime(): bool
     {
-        return $this->end instanceof DateTimeInterface;
+        return $this->state->hasEndTime();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isBeginAt(DateTimeInterface $time): bool
+    public function getStartTime(): DateTimeInterface
     {
-        return $this->begin->getTimestamp() === $time->getTimestamp();
+        return $this->state->getStartTime();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEndTime(): DateTimeInterface
+    {
+        return $this->state->getEndTime();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setStartTime(DateTimeInterface $time): DateRangeInterface
+    {
+        $clone = clone $this;
+        $clone->state = $clone->state->setStartTime($time);
+
+        return $clone;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setEndTime(DateTimeInterface $time): DateRangeInterface
+    {
+        $clone = clone $this;
+        $clone->state = $clone->state->setEndTime($time);
+
+        return $clone;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isStartAt(DateTimeInterface $time): bool
+    {
+        return $this->state->isStartAt($time);
     }
 
     /**
@@ -100,7 +148,7 @@ final class DateRange implements DateRangeInterface, Serializable, JsonSerializa
      */
     public function isEndAt(DateTimeInterface $time): bool
     {
-        return $this->end->getTimestamp() === $time->getTimestamp();
+        return $this->state->isEndAt($time);
     }
 
     /**
@@ -108,7 +156,7 @@ final class DateRange implements DateRangeInterface, Serializable, JsonSerializa
      */
     public function isStarted(): bool
     {
-        return $this->begin <= new DateTimeImmutable();
+        return $this->state->isStarted();
     }
 
     /**
@@ -116,81 +164,6 @@ final class DateRange implements DateRangeInterface, Serializable, JsonSerializa
      */
     public function isEnded(): bool
     {
-        return $this->isFinite() && $this->end <= new DateTimeImmutable();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beginAt(DateTimeInterface $time): DateRangeInterface
-    {
-        $this->guardDateSequence($time, $this->end);
-
-        $this->begin = $time;
-        
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function endAt(DateTimeInterface $time): DateRangeInterface
-    {
-        $this->guardDateSequence($this->begin, $time);
-
-        $this->end = $time;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return sprintf(
-            '%s/%s',
-            $this->getBegin()->format('c'),
-            $this->isFinite()
-                ? $this->getEnd()->format('c')
-                : '-'
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        $times = explode('/', $serialized, 2);
-
-        if (count($times) !== 2) {
-            throw new DateRangeException('Invalid range format');
-        }
-
-        $this->begin = new DateTimeImmutable($times[0]);
-
-        if ($times[1] !== '-') {
-            $this->end = new DateTimeImmutable($times[1]);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
-    {
-        return $this->serialize();
-    }
-
-    /**
-     * @param DateTimeInterface $begin
-     * @param DateTimeInterface|null $end
-     */
-    private function guardDateSequence(DateTimeInterface $begin, DateTimeInterface $end = null)
-    {
-        if ($end && $end <= $begin) {
-            throw new DateRangeException('Invalid end, must be after begin');
-        }
+        return $this->state->isEnded();
     }
 }
