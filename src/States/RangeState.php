@@ -61,14 +61,14 @@ interface RangeState extends JsonSerializable
      *
      * @return bool
      */
-    public function isStartAt(DateTimeInterface $time): bool;
+    public function isStartedAt(DateTimeInterface $time): bool;
 
     /**
      * @param DateTimeInterface $time
      *
      * @return bool
      */
-    public function isEndAt(DateTimeInterface $time): bool;
+    public function isEndedAt(DateTimeInterface $time): bool;
 
     /**
      * @return bool

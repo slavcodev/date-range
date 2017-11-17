@@ -138,7 +138,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isStartAt(DateTimeInterface $time): bool
+    public function isStartedAt(DateTimeInterface $time): bool
     {
         return $this->state->isStartAt($time);
     }
@@ -146,7 +146,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isEndAt(DateTimeInterface $time): bool
+    public function isEndedAt(DateTimeInterface $time): bool
     {
         return $this->state->isEndAt($time);
     }

@@ -102,7 +102,7 @@ final class FiniteRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function isStartAt(DateTimeInterface $time): bool
+    public function isStartedAt(DateTimeInterface $time): bool
     {
         return $this->startTime->getTimestamp() === $time->getTimestamp();
     }
@@ -110,7 +110,7 @@ final class FiniteRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function isEndAt(DateTimeInterface $time): bool
+    public function isEndedAt(DateTimeInterface $time): bool
     {
         return $this->endTime->getTimestamp() === $time->getTimestamp();
     }

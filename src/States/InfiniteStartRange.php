@@ -91,7 +91,7 @@ final class InfiniteStartRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function isEndAt(DateTimeInterface $time): bool
+    public function isEndedAt(DateTimeInterface $time): bool
     {
         return $this->endTime->getTimestamp() === $time->getTimestamp();
     }
