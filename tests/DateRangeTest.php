@@ -10,8 +10,8 @@
 
 namespace Zee\DateRange;
 
-use DateTime;
 use DateTimeImmutable;
+use DateTimeZone;
 use DomainException;
 use PHPUnit\Framework\TestCase;
 
@@ -23,207 +23,232 @@ class DateRangeTest extends TestCase
     /**
      * @test
      */
-    public function initInfiniteRange()
-    {
-        $range = new DateRange(new DateTime());
-
-        self::assertFalse($range->isFinite());
-        self::assertTrue($range->isStarted());
-        self::assertFalse($range->isEnded());
-    }
-
-    /**
-     * @test
-     */
-    public function initFiniteRange()
-    {
-        $soon = new DateTimeImmutable('+1 day');
-        $nextMonth = new DateTimeImmutable('+1 month');
-        $range = new DateRange($soon, $nextMonth);
-
-        self::assertFalse($range->isStarted());
-        self::assertTrue($range->isFinite());
-        self::assertFalse($range->isEnded());
-        self::assertTrue($range->isEndAt($nextMonth));
-    }
-
-    /**
-     * @test
-     *
-     * @return DateRange
-     */
-    public function initEndedRange() : DateRange
-    {
-        $justNow = new DateTimeImmutable('-1 second');
-        $yesterday = new DateTimeImmutable('-1 day');
-        $range = new DateRange($yesterday, $justNow);
-
-        self::assertTrue($range->isStarted());
-        self::assertTrue($range->isFinite());
-        self::assertTrue($range->isEnded());
-        self::assertSame($yesterday, $range->getBegin());
-        self::assertSame($justNow, $range->getEnd());
-
-        return $range;
-    }
-
-    /**
-     * @test
-     */
-    public function useBackdatingBegin()
-    {
-        $justNow = new DateTimeImmutable('-1 second');
-        $range = new DateRange($justNow);
-
-        self::assertTrue($range->isStarted());
-        self::assertFalse($range->isEnded());
-        self::assertSame($justNow, $range->getBegin());
-    }
-
-    /**
-     * @test
-     */
-    public function setEndOnBegin()
-    {
-        $soon = new DateTimeImmutable('+1 day');
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Invalid end, must be after begin');
-
-        new DateRange($soon, $soon);
-    }
-
-    /**
-     * @test
-     */
-    public function setEndBeforeBegin()
-    {
-        $soon = new DateTimeImmutable('+1 day');
-        $nextMonth = new DateTimeImmutable('+1 month');
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Invalid end, must be after begin');
-
-        new DateRange($nextMonth, $soon);
-    }
-
-    /**
-     * @test
-     *
-     * @return DateRange
-     */
-    public function useFutureBegin() : DateRange
-    {
-        $soon = new DateTimeImmutable('+1 day');
-        $range = new DateRange($soon);
-
-        self::assertFalse($range->isStarted());
-        self::assertFalse($range->isEnded());
-        self::assertTrue($range->isbeginAt($soon));
-
-        return $range;
-    }
-
-    /**
-     * @test
-     * @depends useFutureBegin
-     *
-     * @param DateRange $initial
-     */
-    public function changeBegin(DateRange $initial)
-    {
-        $range = $initial->beginAt($initial->getBegin());
-
-        self::assertSame($initial->getBegin(), $range->getBegin());
-
-        $nextMonth = new DateTimeImmutable('+1 month');
-        $range = $initial->beginAt($nextMonth);
-
-        self::assertFalse($range->isStarted());
-        self::assertFalse($range->isEnded());
-        self::assertSame($nextMonth, $range->getBegin());
-    }
-
-    /**
-     * @test
-     * @depends initEndedRange
-     *
-     * @param DateRange $initial
-     */
-    public function changeEnd(DateRange $initial)
-    {
-        $justNow = $initial->getEnd();
-        $period = $initial->endAt($justNow);
-
-        self::assertEquals($justNow, $period->getEnd());
-
-        $nextMonth = new DateTimeImmutable('+1 month');
-        $period = $initial->endAt($nextMonth);
-
-        self::assertTrue($period->isStarted());
-        self::assertFalse($period->isEnded());
-        self::assertSame($nextMonth, $period->getEnd());
-    }
-
-    /**
-     * @test
-     * @dataProvider provideDateRanges
-     *
-     * @param DateRange $initial
-     */
-    public function serializeRange(DateRange $initial)
-    {
-        $actual = unserialize(serialize($initial));
-
-        if ($actual instanceof DateRange) {
-            self::assertTrue($actual->isBeginAt($initial->getBegin()));
-
-            if ($initial->isFinite()) {
-                self::assertTrue($actual->isEndAt($initial->getEnd()));
-            }
-        } else {
-            self::fail('Cannot serialize/deserialize date range');
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function handleInvalidSerializedValue()
-    {
-        $range = new DateRange(new DateTime());
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Invalid range format');
-
-        $range->unserialize('');
-    }
-
-    /**
-     * @test
-     * @dataProvider provideDateRanges
-     *
-     * @param DateRange $range
-     */
-    public function jsonEncodeRange(DateRange $range)
-    {
-        $expected = json_encode((string) $range);
-        $actual = json_encode($range);
-
-        self::assertSame($expected, $actual);
-    }
-
-    /**
-     * @return array
-     */
-    public function provideDateRanges(): array
+    public function undefinedRange()
     {
         $now = new DateTimeImmutable();
-        $soon = new DateTimeImmutable('+1 day');
+        $actual = new DateRange();
 
-        return [
-            [new DateRange($now)],
-            [new DateRange($now, $soon)],
-        ];
+        self::assertFalse($actual->hasStartTime());
+        self::assertFalse($actual->hasEndTime());
+        self::assertFalse($actual->isStarted());
+        self::assertFalse($actual->isEnded());
+        self::assertFalse($actual->isStartAt($now));
+        self::assertFalse($actual->isEndAt($now));
+        self::assertSame('-/-', (string) $actual);
+        self::assertSame(
+            json_encode(['startTime' => null, 'endTime' => null]),
+            json_encode($actual)
+        );
+
+        $changed = $actual->setStartTime($now);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($now, $changed->getStartTime());
+
+        $changed = $actual->setEndTime($now);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($now, $changed->getEndTime());
+    }
+
+    /**
+     * @test
+     */
+    public function undefinedRangeHasNoStartTime()
+    {
+        $actual = new DateRange();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Date range is undefined');
+
+        $actual->getStartTime();
+    }
+
+    /**
+     * @test
+     */
+    public function undefinedRangeHasNoEndTime()
+    {
+        $actual = new DateRange();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Date range is undefined');
+
+        $actual->getEndTime();
+    }
+
+    /**
+     * @test
+     */
+    public function infiniteEndRange()
+    {
+        $now = new DateTimeImmutable();
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $actual = new DateRange($now);
+
+        self::assertTrue($actual->hasStartTime());
+        self::assertFalse($actual->hasEndTime());
+        self::assertTrue($actual->isStarted());
+        self::assertFalse($actual->isEnded());
+        self::assertTrue($actual->isStartAt($now));
+        self::assertFalse($actual->isStartAt($tomorrow));
+        self::assertFalse($actual->isEndAt($now));
+        self::assertSame("{$now->format('c')}/-", (string) $actual);
+        self::assertSame(
+            json_encode(['startTime' => $now->format('c'), 'endTime' => null]),
+            json_encode($actual)
+        );
+
+        $changed = $actual->setStartTime($tomorrow);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($tomorrow, $changed->getStartTime());
+
+        $changed = $actual->setEndTime($tomorrow);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($now, $changed->getStartTime());
+        self::assertSame($tomorrow, $changed->getEndTime());
+    }
+
+    /**
+     * @test
+     */
+    public function infiniteEndRangeHasNoEndTime()
+    {
+        $now = new DateTimeImmutable();
+        $actual = new DateRange($now);
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Date range is undefined');
+
+        $actual->getEndTime();
+    }
+
+    /**
+     * @test
+     */
+    public function infiniteStartRange()
+    {
+        $now = new DateTimeImmutable();
+        $yesterday = new DateTimeImmutable('-1 day');
+        $actual = new DateRange(null, $now);
+
+        self::assertFalse($actual->hasStartTime());
+        self::assertTrue($actual->hasEndTime());
+        self::assertTrue($actual->isStarted());
+        self::assertTrue($actual->isEnded());
+        self::assertFalse($actual->isStartAt($now));
+        self::assertTrue($actual->isEndAt($now));
+        self::assertFalse($actual->isEndAt($yesterday));
+        self::assertSame("-/{$now->format('c')}", (string) $actual);
+        self::assertSame(
+            json_encode(['startTime' => null, 'endTime' => $now->format('c')]),
+            json_encode($actual)
+        );
+
+        $changed = $actual->setEndTime($yesterday);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($yesterday, $changed->getEndTime());
+
+        $changed = $actual->setStartTime($yesterday);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($yesterday, $changed->getStartTime());
+        self::assertSame($now, $changed->getEndTime());
+    }
+
+    /**
+     * @test
+     */
+    public function infiniteStartRangeHasNoStartTime()
+    {
+        $now = new DateTimeImmutable();
+        $actual = new DateRange(null, $now);
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Date range is undefined');
+
+        $actual->getStartTime();
+    }
+
+    /**
+     * @test
+     */
+    public function finiteRange()
+    {
+        $now = new DateTimeImmutable();
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $actual = new DateRange($yesterday, $tomorrow);
+
+        self::assertTrue($actual->hasStartTime());
+        self::assertTrue($actual->hasEndTime());
+        self::assertTrue($actual->isStarted());
+        self::assertFalse($actual->isEnded());
+        self::assertFalse($actual->isStartAt($now));
+        self::assertTrue($actual->isStartAt($yesterday));
+        self::assertFalse($actual->isEndAt($now));
+        self::assertTrue($actual->isEndAt($tomorrow));
+        self::assertSame("{$yesterday->format('c')}/{$tomorrow->format('c')}", (string) $actual);
+        self::assertSame(
+            json_encode(['startTime' => $yesterday->format('c'), 'endTime' => $tomorrow->format('c')]),
+            json_encode($actual)
+        );
+
+        $changed = $actual->setEndTime($now);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($now, $changed->getEndTime());
+        self::assertSame($yesterday, $changed->getStartTime());
+
+        $changed = $actual->setStartTime($now);
+
+        self::assertNotSame($actual, $changed);
+        self::assertSame($now, $changed->getStartTime());
+        self::assertSame($tomorrow, $changed->getEndTime());
+    }
+
+    /**
+     * @test
+     */
+    public function setEndOnStart()
+    {
+        $cet = new DateTimeImmutable('now', new DateTimeZone('CET'));
+        $est = new DateTimeImmutable('now', new DateTimeZone('EST'));
+
+        self::assertSame($cet->getTimestamp(), $est->getTimestamp());
+
+        $this->expectExceptionMessage('Invalid end time, must be after start');
+
+        new DateRange($cet, $cet);
+    }
+
+    /**
+     * @test
+     */
+    public function setEndBeforeStart()
+    {
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Invalid end time, must be after start');
+
+        new DateRange($tomorrow, $yesterday);
+    }
+
+    /**
+     * @test
+     */
+    public function dumpRange()
+    {
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $range = new DateRange($yesterday, $tomorrow);
+        $dump = print_r($range, true);
+
+        self::assertNotContains('state', $dump);
     }
 }

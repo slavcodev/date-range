@@ -18,6 +18,16 @@ Security - in case of vulnerabilities.
 
 _TBD_
 
+## [0.1.1] 2017-11-17
+
+### Changed
+- Implement `State` pattern to control ranges objects.
+- Change JSON representation to array instead of string in previous version.
+
+### Changed
+- Remove mutable object, leave only immutable.
+- Remove implementation of Serializable interface.
+
 ## [0.0.1] 2017-11-16
 
 Initial release.
