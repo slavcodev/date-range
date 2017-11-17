@@ -77,7 +77,7 @@ class UndefinedRange implements RangeState
     /**
      * {@inheritdoc}
      */
-    public function isStartAt(DateTimeInterface $time): bool
+    public function isStartedAt(DateTimeInterface $time): bool
     {
         return false;
     }
@@ -85,7 +85,7 @@ class UndefinedRange implements RangeState
     /**
      * {@inheritdoc}
      */
-    public function isEndAt(DateTimeInterface $time): bool
+    public function isEndedAt(DateTimeInterface $time): bool
     {
         return false;
     }

@@ -77,7 +77,7 @@ interface DateRangeInterface
      *
      * @return bool
      */
-    public function isStartAt(DateTimeInterface $time): bool;
+    public function isStartedAt(DateTimeInterface $time): bool;
 
     /**
      * Tells whether range is ended at specific time.
@@ -86,7 +86,7 @@ interface DateRangeInterface
      *
      * @return bool
      */
-    public function isEndAt(DateTimeInterface $time): bool;
+    public function isEndedAt(DateTimeInterface $time): bool;
 
     /**
      * Tells whether range is started at current time.
