@@ -18,6 +18,13 @@ use DateTimeInterface;
 interface DateRangeInterface
 {
     /**
+     * Returns string representation of range.
+     *
+     * {@inheritdoc}
+     */
+    public function __toString(): string;
+
+    /**
      * Returns whether the starting time is defined.
      *
      * @return bool
