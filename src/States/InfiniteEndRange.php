@@ -3,11 +3,12 @@
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
+use Zee\DateRange\DateRangeException;
 
 /**
  * Class InfiniteEndRange.
  */
-final class InfiniteEndRange extends UndefinedRange
+final class InfiniteEndRange extends RangeState
 {
     /**
      * @var DateTimeInterface
@@ -25,22 +26,6 @@ final class InfiniteEndRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function __toString(): string
-    {
-        return sprintf('%s/-', $this->startTime->format('c'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize(): array
-    {
-        return ['startTime' => $this->startTime->format('c'), 'endTime' => null];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hasStartTime(): bool
     {
         return true;
@@ -49,9 +34,25 @@ final class InfiniteEndRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
+    public function hasEndTime(): bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getStartTime(): DateTimeInterface
     {
         return $this->startTime;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEndTime(): DateTimeInterface
+    {
+        throw new DateRangeException('Range end is undefined');
     }
 
     /**
@@ -73,8 +74,8 @@ final class InfiniteEndRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function compareStartTime(DateTimeInterface $time): int
+    public function formatEndTime(string $format = 'c'): ?string
     {
-        return $this->startTime->getTimestamp() <=> $time->getTimestamp();
+        return null;
     }
 }

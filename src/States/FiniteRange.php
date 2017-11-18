@@ -8,7 +8,7 @@ use Zee\DateRange\DateRangeException;
 /**
  * Class FiniteRange.
  */
-final class FiniteRange extends UndefinedRange
+final class FiniteRange extends RangeState
 {
     /**
      * @var DateTimeInterface
@@ -32,22 +32,6 @@ final class FiniteRange extends UndefinedRange
 
         $this->startTime = $startTime;
         $this->endTime = $endTime;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
-    {
-        return sprintf('%s/%s', $this->startTime->format('c'), $this->endTime->format('c'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize(): array
-    {
-        return ['startTime' => $this->startTime->format('c'), 'endTime' => $this->endTime->format('c')];
     }
 
     /**
@@ -96,21 +80,5 @@ final class FiniteRange extends UndefinedRange
     public function setEndTime(DateTimeInterface $time): RangeState
     {
         return new FiniteRange($this->startTime, $time);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function compareStartTime(DateTimeInterface $time): int
-    {
-        return $this->startTime->getTimestamp() <=> $time->getTimestamp();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function compareEndTime(DateTimeInterface $time): int
-    {
-        return $this->endTime->getTimestamp() <=> $time->getTimestamp();
     }
 }

@@ -8,7 +8,7 @@ use Zee\DateRange\DateRangeException;
 /**
  * Class InfiniteStartRange.
  */
-final class InfiniteStartRange extends UndefinedRange
+final class InfiniteStartRange extends RangeState
 {
     /**
      * @var DateTimeInterface
@@ -26,25 +26,17 @@ final class InfiniteStartRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function __toString(): string
-    {
-        return sprintf('-/%s', $this->endTime->format('c'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize(): array
-    {
-        return ['startTime' => null, 'endTime' => $this->endTime->format('c')];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hasEndTime(): bool
     {
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStartTime(): DateTimeInterface
+    {
+        throw new DateRangeException('Range start is undefined');
     }
 
     /**
@@ -74,8 +66,8 @@ final class InfiniteStartRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function compareEndTime(DateTimeInterface $time): int
+    public function formatStartTime(string $format = 'c'): ?string
     {
-        return $this->endTime->getTimestamp() <=> $time->getTimestamp();
+        return null;
     }
 }
