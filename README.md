@@ -110,6 +110,7 @@ class RangeForYear implements DateRangeProvider
             new DateTimeImmutable(DateTimeImmutable::createFromFormat('c', "{$this->year}-12-31T23:59:59Z"))
         );
     }
+}
 ~~~
 
 Your classes might depend on range provider instead of `DateRange`,
@@ -129,7 +130,7 @@ $calculator->calculate(new RangeForQuarter(2017));
 $calculator->calculate(new RangeForMonth(2017));
 ~~~
 
-Even your class might require concrete range contact:
+Even your class might require concrete range contract:
 
 ~~~php
 class ReportCalculator
