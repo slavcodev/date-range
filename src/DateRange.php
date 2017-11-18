@@ -10,9 +10,12 @@
 
 namespace Zee\DateRange;
 
+use DateInterval;
+use DatePeriod;
 use DateTimeImmutable;
 use DateTimeInterface;
 use JsonSerializable;
+use Traversable;
 use Zee\DateRange\States\RangeState;
 use Zee\DateRange\States\UndefinedRange;
 
@@ -170,5 +173,38 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     public function isEnded(): bool
     {
         return $this->hasEndTime() && $this->state->compareEndTime(new DateTimeImmutable()) < 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateInterval(): DateInterval
+    {
+        return $this->getStartTime()->diff($this->getEndTime());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod
+    {
+        return new DatePeriod($this->getStartTime(), $interval, $this->getEndTime(), $option);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function split(DateInterval $interval): Traversable
+    {
+        $startDate = $this->getStartTime();
+        $endDate = $this->getEndTime();
+        $period = $this->getDatePeriod($interval, DatePeriod::EXCLUDE_START_DATE);
+
+        foreach ($period as $date) {
+            yield new DateRange($startDate, $date);
+            $startDate = $date;
+        }
+
+        yield new DateRange($startDate, $endDate);
     }
 }

@@ -10,7 +10,10 @@
 
 namespace Zee\DateRange;
 
+use DateInterval;
+use DatePeriod;
 use DateTimeInterface;
+use Traversable;
 
 /**
  * Date range interface.
@@ -101,4 +104,37 @@ interface DateRangeInterface
      * @return bool
      */
     public function isEnded(): bool;
+
+    /**
+     * Returns the range interval.
+     *
+     * @return DateInterval
+     */
+    public function getDateInterval(): DateInterval;
+
+    /**
+     * Returns date period according to a given interval.
+     *
+     * Allows iteration over the range.
+     *
+     * @param DateInterval $interval
+     * @param int $option
+     *
+     * @return DatePeriod|DateTimeInterface[]
+     */
+    public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod;
+
+    /**
+     * Splits range into smaller ranges according to a given interval.
+     *
+     * All resulting ranges (except first and last) starts on same date as previously ends.
+     * The first starts on same date as parent range, last ends on same date as parent range.
+     *
+     * Keep in mind that the last range may be equal or lesser than the given interval.
+     *
+     * @param DateInterval $interval
+     *
+     * @return Traversable
+     */
+    public function split(DateInterval $interval): Traversable;
 }
