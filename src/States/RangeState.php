@@ -12,7 +12,7 @@ abstract class RangeState
     /**
      * @return bool
      */
-    public function hasStartTime(): bool
+    public function hasStartDate(): bool
     {
         return false;
     }
@@ -20,7 +20,7 @@ abstract class RangeState
     /**
      * @return bool
      */
-    public function hasEndTime(): bool
+    public function hasEndDate(): bool
     {
         return false;
     }
@@ -28,55 +28,55 @@ abstract class RangeState
     /**
      * @return DateTimeInterface
      */
-    abstract public function getStartTime(): DateTimeInterface;
+    abstract public function getStartDate(): DateTimeInterface;
 
     /**
      * @return DateTimeInterface
      */
-    abstract public function getEndTime(): DateTimeInterface;
+    abstract public function getEndDate(): DateTimeInterface;
 
     /**
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $start
      *
      * @return RangeState
      */
-    abstract public function setStartTime(DateTimeInterface $time): RangeState;
+    abstract public function setStartDate(DateTimeInterface $start): RangeState;
 
     /**
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $end
      *
      * @return RangeState
      */
-    abstract public function setEndTime(DateTimeInterface $time): RangeState;
+    abstract public function setEndDate(DateTimeInterface $end): RangeState;
 
     /**
-     * Compares start time with specific time.
+     * Compares start date with specific date.
      *
-     * Returns 0 if times are equals, negative if start time is less than given time,
-     * and positive if start time is greater.
+     * Returns 0 if dates are equals, negative if start date is less than given date,
+     * and positive if start date is greater.
      *
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $date
      *
      * @return int
      */
-    public function compareStartTime(DateTimeInterface $time): int
+    public function compareStartDate(DateTimeInterface $date): int
     {
-        return $this->getStartTime()->getTimestamp() <=> $time->getTimestamp();
+        return $this->getStartDate()->getTimestamp() <=> $date->getTimestamp();
     }
 
     /**
-     * Compares end time with specific time.
+     * Compares end date with specific date.
      *
-     * Returns 0 if times are equals, negative if end time is less than given time
-     * and positive if end time is greater.
+     * Returns 0 if dates are equals, negative if end date is less than given date
+     * and positive if end date is greater.
      *
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $date
      *
      * @return int
      */
-    public function compareEndTime(DateTimeInterface $time): int
+    public function compareEndDate(DateTimeInterface $date): int
     {
-        return $this->getEndTime()->getTimestamp() <=> $time->getTimestamp();
+        return $this->getEndDate()->getTimestamp() <=> $date->getTimestamp();
     }
 
     /**
@@ -84,9 +84,9 @@ abstract class RangeState
      *
      * @return null|string
      */
-    public function formatStartTime(string $format = 'c'): ?string
+    public function formatStartDate(string $format = 'c'): ?string
     {
-        return $this->getStartTime()->format($format);
+        return $this->getStartDate()->format($format);
     }
 
     /**
@@ -94,8 +94,8 @@ abstract class RangeState
      *
      * @return null|string
      */
-    public function formatEndTime(string $format = 'c'): ?string
+    public function formatEndDate(string $format = 'c'): ?string
     {
-        return $this->getEndTime()->format($format);
+        return $this->getEndDate()->format($format);
     }
 }

@@ -13,7 +13,7 @@ final class UndefinedRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function getStartTime(): DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
         throw new DateRangeException('Range start is undefined');
     }
@@ -21,7 +21,7 @@ final class UndefinedRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function getEndTime(): DateTimeInterface
+    public function getEndDate(): DateTimeInterface
     {
         throw new DateRangeException('Range end is undefined');
     }
@@ -29,23 +29,23 @@ final class UndefinedRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function setStartTime(DateTimeInterface $time): RangeState
+    public function setStartDate(DateTimeInterface $start): RangeState
     {
-        return new InfiniteEndRange($time);
+        return new InfiniteEndRange($start);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setEndTime(DateTimeInterface $time): RangeState
+    public function setEndDate(DateTimeInterface $end): RangeState
     {
-        return new InfiniteStartRange($time);
+        return new InfiniteStartRange($end);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function formatStartTime(string $format = 'c'): ?string
+    public function formatStartDate(string $format = 'c'): ?string
     {
         return null;
     }
@@ -53,7 +53,7 @@ final class UndefinedRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function formatEndTime(string $format = 'c'): ?string
+    public function formatEndDate(string $format = 'c'): ?string
     {
         return null;
     }
