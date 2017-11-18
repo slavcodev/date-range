@@ -18,13 +18,23 @@ Security - in case of vulnerabilities.
 
 _TBD_
 
+## [0.3.0] 2017-11-18
+
+### Added
+- Added new methods `getInterval`, `getPeriod`, `split`
+- Added `DateRangeProvider` interface and basic provider `FiniteDateRangeProvider`
+
+### Changed
+- Rename methods from using `time` ot `date`.
+- Refactored internals.
+
 ## [0.1.1] 2017-11-17
 
 ### Changed
 - Implement `State` pattern to control ranges objects.
 - Change JSON representation to array instead of string in previous version.
 
-### Changed
+### Removed
 - Remove mutable object, leave only immutable.
 - Remove implementation of Serializable interface.
 
