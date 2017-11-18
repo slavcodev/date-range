@@ -149,6 +149,14 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     /**
      * {@inheritdoc}
      */
+    public function isFinite(): bool
+    {
+        return $this->hasStartDate() && $this->hasEndDate();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isStartedOn(DateTimeInterface $date): bool
     {
         return $this->hasStartDate() && $this->state->compareStartDate($date) === 0;
@@ -170,7 +178,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
         if ($this->hasStartDate()) {
             return $this->state->compareStartDate(new DateTimeImmutable()) <= 0;
         } else {
-            return $this->hasEndDate();
+            return !$this->isEnded();
         }
     }
 

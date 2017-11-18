@@ -12,10 +12,7 @@ namespace Zee\DateRange;
 
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeZone;
-use DomainException;
 use PHPUnit\Framework\TestCase;
-use Zee\DateRange\States\UndefinedRange;
 
 /**
  * Class DateRangeTest.
@@ -25,247 +22,80 @@ class DateRangeTest extends TestCase
     /**
      * @test
      */
-    public function undefinedRange()
+    public function rangeIsCastingToString()
     {
-        $now = new DateTimeImmutable();
-        $actual = new DateRange();
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
 
-        self::assertFalse($actual->hasStartDate());
-        self::assertFalse($actual->hasEndDate());
-        self::assertFalse($actual->isStarted());
-        self::assertFalse($actual->isEnded());
-        self::assertFalse($actual->isStartedOn($now));
-        self::assertFalse($actual->isEndedOn($now));
-        self::assertSame('-/-', (string) $actual);
+        self::assertSame('-/-', (string) new DateRange());
+        self::assertSame("{$yesterday->format('c')}/-", (string) new DateRange($yesterday));
+        self::assertSame("-/{$tomorrow->format('c')}", (string) new DateRange(null, $tomorrow));
+        self::assertSame("{$yesterday->format('c')}/{$tomorrow->format('c')}", (string) new DateRange($yesterday, $tomorrow));
+    }
+
+    /**
+     * @test
+     */
+    public function rangeIsJsonSerializable()
+    {
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+
         self::assertSame(
             json_encode(['startDate' => null, 'endDate' => null]),
-            json_encode($actual)
+            json_encode(new DateRange())
         );
-
-        $changed = $actual->setStartDate($now);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($now, $changed->getStartDate());
-
-        $changed = $actual->setEndDate($now);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($now, $changed->getEndDate());
-    }
-
-    /**
-     * @test
-     */
-    public function undefinedRangeHasNostartDate()
-    {
-        $actual = new DateRange();
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Range start is undefined');
-
-        $actual->getStartDate();
-    }
-
-    /**
-     * @test
-     */
-    public function undefinedRangeHasNoendDate()
-    {
-        $actual = new DateRange();
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Range end is undefined');
-
-        $actual->getEndDate();
-    }
-
-    /**
-     * @test
-     */
-    public function cannotCompareUndefinedStart()
-    {
-        $actual = new UndefinedRange();
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Range start is undefined');
-
-        $actual->compareStartDate(new DateTimeImmutable());
-    }
-
-    /**
-     * @test
-     */
-    public function cannotCompareUndefinedEnd()
-    {
-        $actual = new UndefinedRange();
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Range end is undefined');
-
-        $actual->compareEndDate(new DateTimeImmutable());
-    }
-
-    /**
-     * @test
-     */
-    public function infiniteEndRange()
-    {
-        $now = new DateTimeImmutable();
-        $tomorrow = new DateTimeImmutable('+1 day');
-        $actual = new DateRange($now);
-
-        self::assertTrue($actual->hasStartDate());
-        self::assertFalse($actual->hasEndDate());
-        self::assertTrue($actual->isStarted());
-        self::assertFalse($actual->isEnded());
-        self::assertTrue($actual->isStartedOn($now));
-        self::assertFalse($actual->isStartedOn($tomorrow));
-        self::assertFalse($actual->isEndedOn($now));
-        self::assertSame("{$now->format('c')}/-", (string) $actual);
         self::assertSame(
-            json_encode(['startDate' => $now->format('c'), 'endDate' => null]),
-            json_encode($actual)
+            json_encode(['startDate' => $yesterday->format('c'), 'endDate' => null]),
+            json_encode(new DateRange($yesterday))
         );
-
-        $changed = $actual->setStartDate($tomorrow);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($tomorrow, $changed->getStartDate());
-
-        $changed = $actual->setEndDate($tomorrow);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($now, $changed->getStartDate());
-        self::assertSame($tomorrow, $changed->getEndDate());
-    }
-
-    /**
-     * @test
-     */
-    public function infiniteEndRangeHasNoendDate()
-    {
-        $now = new DateTimeImmutable();
-        $actual = new DateRange($now);
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Range end is undefined');
-
-        $actual->getEndDate();
-    }
-
-    /**
-     * @test
-     */
-    public function infiniteStartRange()
-    {
-        $now = new DateTimeImmutable();
-        $yesterday = new DateTimeImmutable('-1 day');
-        $actual = new DateRange(null, $now);
-
-        self::assertFalse($actual->hasStartDate());
-        self::assertTrue($actual->hasEndDate());
-        self::assertTrue($actual->isStarted());
-        self::assertFalse($actual->isEnded());
-        self::assertFalse($actual->isStartedOn($now));
-        self::assertTrue($actual->isEndedOn($now));
-        self::assertFalse($actual->isEndedOn($yesterday));
-        self::assertSame("-/{$now->format('c')}", (string) $actual);
         self::assertSame(
-            json_encode(['startDate' => null, 'endDate' => $now->format('c')]),
-            json_encode($actual)
+            json_encode(['startDate' => null, 'endDate' => $tomorrow->format('c')]),
+            json_encode(new DateRange(null, $tomorrow))
         );
-
-        $changed = $actual->setEndDate($yesterday);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($yesterday, $changed->getEndDate());
-        self::assertTrue($changed->isEnded());
-
-        $changed = $actual->setStartDate($yesterday);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($yesterday, $changed->getStartDate());
-        self::assertSame($now, $changed->getEndDate());
-    }
-
-    /**
-     * @test
-     */
-    public function infiniteStartRangeHasNostartDate()
-    {
-        $now = new DateTimeImmutable();
-        $actual = new DateRange(null, $now);
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Range start is undefined');
-
-        $actual->getStartDate();
-    }
-
-    /**
-     * @test
-     */
-    public function finiteRange()
-    {
-        $now = new DateTimeImmutable();
-        $yesterday = new DateTimeImmutable('-1 day');
-        $tomorrow = new DateTimeImmutable('+1 day');
-        $actual = new DateRange($yesterday, $tomorrow);
-
-        self::assertTrue($actual->hasStartDate());
-        self::assertTrue($actual->hasEndDate());
-        self::assertTrue($actual->isStarted());
-        self::assertFalse($actual->isEnded());
-        self::assertFalse($actual->isStartedOn($now));
-        self::assertTrue($actual->isStartedOn($yesterday));
-        self::assertFalse($actual->isEndedOn($now));
-        self::assertTrue($actual->isEndedOn($tomorrow));
-        self::assertSame("{$yesterday->format('c')}/{$tomorrow->format('c')}", (string) $actual);
         self::assertSame(
             json_encode(['startDate' => $yesterday->format('c'), 'endDate' => $tomorrow->format('c')]),
-            json_encode($actual)
+            json_encode(new DateRange($yesterday, $tomorrow))
         );
-
-        $changed = $actual->setEndDate($now);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($now, $changed->getEndDate());
-        self::assertSame($yesterday, $changed->getStartDate());
-
-        $changed = $actual->setStartDate($now);
-
-        self::assertNotSame($actual, $changed);
-        self::assertSame($now, $changed->getStartDate());
-        self::assertSame($tomorrow, $changed->getEndDate());
     }
 
     /**
      * @test
      */
-    public function setEndOnStart()
-    {
-        $cet = new DateTimeImmutable('now', new DateTimeZone('CET'));
-        $est = new DateTimeImmutable('now', new DateTimeZone('EST'));
-
-        self::assertSame($cet->getTimestamp(), $est->getTimestamp());
-
-        $this->expectExceptionMessage('Invalid end date, must be after start');
-
-        new DateRange($cet, $cet);
-    }
-
-    /**
-     * @test
-     */
-    public function setEndBeforeStart()
+    public function checkRange()
     {
         $yesterday = new DateTimeImmutable('-1 day');
         $tomorrow = new DateTimeImmutable('+1 day');
+        $range = new DateRange($yesterday, $tomorrow);
+        
+        self::assertTrue($range->hasStartDate());
+        self::assertTrue($range->hasEndDate());
+        self::assertSame($yesterday, $range->getStartDate());
+        self::assertSame($tomorrow, $range->getEndDate());
+        self::assertNotSame($range, $range->setStartDate(new DateTimeImmutable()));
+        self::assertNotSame($range, $range->setEndDate(new DateTimeImmutable()));
+        self::assertTrue($range->isFinite());
+        self::assertTrue($range->isStarted());
+        self::assertFalse($range->isEnded());
+        self::assertTrue($range->isStartedOn($yesterday));
+        self::assertTrue($range->isEndedOn($tomorrow));
+    }
 
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Invalid end date, must be after start');
+    /**
+     * @test
+     */
+    public function startedTillEndOnInfiniteStart()
+    {
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $yesterday = new DateTimeImmutable('-1 day');
 
-        new DateRange($tomorrow, $yesterday);
+        $range = new DateRange(null, $tomorrow);
+
+        self::assertTrue($range->isStarted());
+
+        $range = new DateRange(null, $yesterday);
+
+        self::assertFalse($range->isStarted());
     }
 
     /**
