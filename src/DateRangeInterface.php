@@ -28,78 +28,78 @@ interface DateRangeInterface
     public function __toString(): string;
 
     /**
-     * Returns whether the starting time is defined.
+     * Returns whether the starting date is defined.
      *
      * @return bool
      */
-    public function hasStartTime(): bool;
+    public function hasStartDate(): bool;
 
     /**
-     * Returns whether the ending time is defined.
+     * Returns whether the ending date is defined.
      *
      * @return bool
      */
-    public function hasEndTime(): bool;
+    public function hasEndDate(): bool;
 
     /**
-     * Returns the starting time point.
+     * Returns the starting date point.
      *
      * @return DateTimeInterface
      */
-    public function getStartTime(): DateTimeInterface;
+    public function getStartDate(): DateTimeInterface;
 
     /**
-     * Returns the ending time point.
+     * Returns the ending date point.
      *
      * @return DateTimeInterface
      */
-    public function getEndTime(): DateTimeInterface;
+    public function getEndDate(): DateTimeInterface;
 
     /**
-     * Sets new starting time point.
+     * Sets new starting date point.
      *
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $start
      *
      * @return DateRangeInterface
      */
-    public function setStartTime(DateTimeInterface $time): DateRangeInterface;
+    public function setStartDate(DateTimeInterface $start): DateRangeInterface;
 
     /**
-     * Sets new ending time point.
+     * Sets new ending date point.
      *
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $end
      *
      * @return DateRangeInterface
      */
-    public function setEndTime(DateTimeInterface $time): DateRangeInterface;
+    public function setEndDate(DateTimeInterface $end): DateRangeInterface;
 
     /**
-     * Tells whether range is started at specific time.
+     * Tells whether range is started at specific date.
      *
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $date
      *
      * @return bool
      */
-    public function isStartedAt(DateTimeInterface $time): bool;
+    public function isStartedOn(DateTimeInterface $date): bool;
 
     /**
-     * Tells whether range is ended at specific time.
+     * Tells whether range is ended at specific date.
      *
-     * @param DateTimeInterface $time
+     * @param DateTimeInterface $date
      *
      * @return bool
      */
-    public function isEndedAt(DateTimeInterface $time): bool;
+    public function isEndedOn(DateTimeInterface $date): bool;
 
     /**
-     * Tells whether range is started at current time.
+     * Tells whether range is started at current date.
      *
      * @return bool
      */
     public function isStarted(): bool;
 
     /**
-     * Tells whether range is ended at current time.
+     * Tells whether range is ended at current date.
      *
      * @return bool
      */

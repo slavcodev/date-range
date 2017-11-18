@@ -30,19 +30,19 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     private $state;
 
     /**
-     * @param DateTimeInterface|null $startTime
-     * @param DateTimeInterface|null $endTime
+     * @param DateTimeInterface|null $startDate
+     * @param DateTimeInterface|null $endDate
      */
-    public function __construct(DateTimeInterface $startTime = null, DateTimeInterface $endTime = null)
+    public function __construct(DateTimeInterface $startDate = null, DateTimeInterface $endDate = null)
     {
         $state = new UndefinedRange();
 
-        if (isset($startTime)) {
-            $state = $state->setStartTime($startTime);
+        if (isset($startDate)) {
+            $state = $state->setStartDate($startDate);
         }
 
-        if (isset($endTime)) {
-            $state = $state->setEndTime($endTime);
+        if (isset($endDate)) {
+            $state = $state->setEndDate($endDate);
         }
 
         $this->state = $state;
@@ -57,8 +57,8 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     {
         return sprintf(
             '%s/%s',
-            $this->state->formatStartTime('c') ?: '-',
-            $this->state->formatEndTime('c') ?: '-'
+            $this->state->formatStartDate('c') ?: '-',
+            $this->state->formatEndDate('c') ?: '-'
         );
     }
 
@@ -68,11 +68,11 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     public function __debugInfo()
     {
         return [
-            'startTime' => $this->state->hasStartTime()
-                ? $this->state->getStartTime()
+            'startDate' => $this->state->hasStartDate()
+                ? $this->state->getStartDate()
                 : null,
-            'endTime' => $this->state->hasEndTime()
-                ? $this->state->getEndTime()
+            'endDate' => $this->state->hasEndDate()
+                ? $this->state->getEndDate()
                 : null,
         ];
     }
@@ -87,50 +87,50 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'startTime' => $this->state->formatStartTime(),
-            'endTime' => $this->state->formatEndTime(),
+            'startDate' => $this->state->formatStartDate(),
+            'endDate' => $this->state->formatEndDate(),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasStartTime(): bool
+    public function hasStartDate(): bool
     {
-        return $this->state->hasStartTime();
+        return $this->state->hasStartDate();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasEndTime(): bool
+    public function hasEndDate(): bool
     {
-        return $this->state->hasEndTime();
+        return $this->state->hasEndDate();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getStartTime(): DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
-        return $this->state->getStartTime();
+        return $this->state->getStartDate();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getEndTime(): DateTimeInterface
+    public function getEndDate(): DateTimeInterface
     {
-        return $this->state->getEndTime();
+        return $this->state->getEndDate();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setStartTime(DateTimeInterface $time): DateRangeInterface
+    public function setStartDate(DateTimeInterface $start): DateRangeInterface
     {
         $clone = clone $this;
-        $clone->state = $clone->state->setStartTime($time);
+        $clone->state = $clone->state->setStartDate($start);
 
         return $clone;
     }
@@ -138,10 +138,10 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function setEndTime(DateTimeInterface $time): DateRangeInterface
+    public function setEndDate(DateTimeInterface $end): DateRangeInterface
     {
         $clone = clone $this;
-        $clone->state = $clone->state->setEndTime($time);
+        $clone->state = $clone->state->setEndDate($end);
 
         return $clone;
     }
@@ -149,17 +149,17 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isStartedAt(DateTimeInterface $time): bool
+    public function isStartedOn(DateTimeInterface $date): bool
     {
-        return $this->hasStartTime() && $this->state->compareStartTime($time) === 0;
+        return $this->hasStartDate() && $this->state->compareStartDate($date) === 0;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEndedAt(DateTimeInterface $time): bool
+    public function isEndedOn(DateTimeInterface $date): bool
     {
-        return $this->hasEndTime() && $this->state->compareEndTime($time) === 0;
+        return $this->hasEndDate() && $this->state->compareEndDate($date) === 0;
     }
 
     /**
@@ -167,10 +167,10 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function isStarted(): bool
     {
-        if ($this->hasStartTime()) {
-            return $this->state->compareStartTime(new DateTimeImmutable()) <= 0;
+        if ($this->hasStartDate()) {
+            return $this->state->compareStartDate(new DateTimeImmutable()) <= 0;
         } else {
-            return $this->hasEndTime();
+            return $this->hasEndDate();
         }
     }
 
@@ -179,7 +179,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function isEnded(): bool
     {
-        return $this->hasEndTime() && $this->state->compareEndTime(new DateTimeImmutable()) < 0;
+        return $this->hasEndDate() && $this->state->compareEndDate(new DateTimeImmutable()) < 0;
     }
 
     /**
@@ -187,7 +187,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function getDateInterval(): DateInterval
     {
-        return $this->getStartTime()->diff($this->getEndTime());
+        return $this->getStartDate()->diff($this->getEndDate());
     }
 
     /**
@@ -195,7 +195,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod
     {
-        return new DatePeriod($this->getStartTime(), $interval, $this->getEndTime(), $option);
+        return new DatePeriod($this->getStartDate(), $interval, $this->getEndDate(), $option);
     }
 
     /**
@@ -203,8 +203,8 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function split(DateInterval $interval): Traversable
     {
-        $startDate = $this->getStartTime();
-        $endDate = $this->getEndTime();
+        $startDate = $this->getStartDate();
+        $endDate = $this->getEndDate();
         $period = $this->getDatePeriod($interval, DatePeriod::EXCLUDE_START_DATE);
 
         foreach ($period as $date) {

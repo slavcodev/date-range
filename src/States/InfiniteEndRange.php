@@ -13,20 +13,20 @@ final class InfiniteEndRange extends RangeState
     /**
      * @var DateTimeInterface
      */
-    private $startTime;
+    private $startDate;
 
     /**
-     * @param DateTimeInterface $startTime
+     * @param DateTimeInterface $startDate
      */
-    public function __construct(DateTimeInterface $startTime)
+    public function __construct(DateTimeInterface $startDate)
     {
-        $this->startTime = $startTime;
+        $this->startDate = $startDate;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasStartTime(): bool
+    public function hasStartDate(): bool
     {
         return true;
     }
@@ -34,7 +34,7 @@ final class InfiniteEndRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function hasEndTime(): bool
+    public function hasEndDate(): bool
     {
         return false;
     }
@@ -42,15 +42,15 @@ final class InfiniteEndRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function getStartTime(): DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
-        return $this->startTime;
+        return $this->startDate;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getEndTime(): DateTimeInterface
+    public function getEndDate(): DateTimeInterface
     {
         throw new DateRangeException('Range end is undefined');
     }
@@ -58,23 +58,23 @@ final class InfiniteEndRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function setStartTime(DateTimeInterface $time): RangeState
+    public function setStartDate(DateTimeInterface $start): RangeState
     {
-        return new InfiniteEndRange($time);
+        return new InfiniteEndRange($start);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setEndTime(DateTimeInterface $time): RangeState
+    public function setEndDate(DateTimeInterface $end): RangeState
     {
-        return new FiniteRange($this->startTime, $time);
+        return new FiniteRange($this->startDate, $end);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function formatEndTime(string $format = 'c'): ?string
+    public function formatEndDate(string $format = 'c'): ?string
     {
         return null;
     }

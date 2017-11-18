@@ -13,31 +13,31 @@ final class FiniteRange extends RangeState
     /**
      * @var DateTimeInterface
      */
-    private $startTime;
+    private $startDate;
 
     /**
      * @var DateTimeInterface
      */
-    private $endTime;
+    private $endDate;
 
     /**
-     * @param DateTimeInterface $startTime
-     * @param DateTimeInterface $endTime
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
      */
-    public function __construct(DateTimeInterface $startTime, DateTimeInterface $endTime)
+    public function __construct(DateTimeInterface $startDate, DateTimeInterface $endDate)
     {
-        if ($endTime <= $startTime) {
-            throw new DateRangeException('Invalid end time, must be after start');
+        if ($endDate <= $startDate) {
+            throw new DateRangeException('Invalid end date, must be after start');
         }
 
-        $this->startTime = $startTime;
-        $this->endTime = $endTime;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasStartTime(): bool
+    public function hasStartDate(): bool
     {
         return true;
     }
@@ -45,7 +45,7 @@ final class FiniteRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function hasEndTime(): bool
+    public function hasEndDate(): bool
     {
         return true;
     }
@@ -53,32 +53,32 @@ final class FiniteRange extends RangeState
     /**
      * {@inheritdoc}
      */
-    public function getStartTime(): DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
-        return $this->startTime;
+        return $this->startDate;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getEndTime(): DateTimeInterface
+    public function getEndDate(): DateTimeInterface
     {
-        return $this->endTime;
+        return $this->endDate;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setStartTime(DateTimeInterface $time): RangeState
+    public function setStartDate(DateTimeInterface $start): RangeState
     {
-        return new FiniteRange($time, $this->endTime);
+        return new FiniteRange($start, $this->endDate);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setEndTime(DateTimeInterface $time): RangeState
+    public function setEndDate(DateTimeInterface $end): RangeState
     {
-        return new FiniteRange($this->startTime, $time);
+        return new FiniteRange($this->startDate, $end);
     }
 }
