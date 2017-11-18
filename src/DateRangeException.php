@@ -16,7 +16,7 @@ use Throwable;
 /**
  * Date range exception.
  */
-final class DateRangeException extends DomainException
+final class DateRangeException extends DomainException implements Exception
 {
     /**
      * @param string $message
