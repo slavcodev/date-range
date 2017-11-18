@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class DateRangeTest.
  */
-class DateRangeTest extends TestCase
+final class DateRangeTest extends TestCase
 {
     /**
      * @test
