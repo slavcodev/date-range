@@ -74,6 +74,13 @@ interface DateRangeInterface
     public function setEndDate(DateTimeInterface $end): DateRangeInterface;
 
     /**
+     * Returns whether the starting and ending date is defined.
+     *
+     * @return bool
+     */
+    public function isFinite(): bool;
+
+    /**
      * Tells whether range is started at specific date.
      *
      * @param DateTimeInterface $date
