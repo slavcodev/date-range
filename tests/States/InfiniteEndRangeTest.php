@@ -20,7 +20,7 @@ use Zee\DateRange\DateRangeException;
 final class InfiniteEndRangeTest extends TestCase
 {
     /**
-     * @var FiniteRange
+     * @var FiniteState
      */
     private $subject;
 
@@ -43,7 +43,7 @@ final class InfiniteEndRangeTest extends TestCase
 
         $this->yesterday = new DateTimeImmutable('-1 day');
         $this->tomorrow = new DateTimeImmutable('+1 day');
-        $this->subject = new InfiniteEndRange($this->yesterday);
+        $this->subject = new InfiniteEndState($this->yesterday);
     }
 
     /**
@@ -53,8 +53,8 @@ final class InfiniteEndRangeTest extends TestCase
     {
         self::assertTrue($this->subject->hasStartDate());
         self::assertFalse($this->subject->hasEndDate());
-        self::assertInstanceOf(InfiniteEndRange::class, $this->subject->setStartDate(new DateTimeImmutable()));
-        self::assertInstanceOf(FiniteRange::class, $this->subject->setEndDate(new DateTimeImmutable()));
+        self::assertInstanceOf(InfiniteEndState::class, $this->subject->setStartDate(new DateTimeImmutable()));
+        self::assertInstanceOf(FiniteState::class, $this->subject->setEndDate(new DateTimeImmutable()));
         self::assertSame($this->yesterday, $this->subject->getStartDate());
         self::assertSame(0, $this->subject->compareStartDate($this->yesterday));
         self::assertSame(-1, $this->subject->compareStartDate($this->tomorrow));

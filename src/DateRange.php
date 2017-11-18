@@ -17,7 +17,7 @@ use DateTimeInterface;
 use JsonSerializable;
 use Traversable;
 use Zee\DateRange\States\RangeState;
-use Zee\DateRange\States\UndefinedRange;
+use Zee\DateRange\States\UndefinedState;
 
 /**
  * Implementation of date range value object.
@@ -35,7 +35,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function __construct(DateTimeInterface $startDate = null, DateTimeInterface $endDate = null)
     {
-        $state = new UndefinedRange();
+        $state = new UndefinedState();
 
         if (isset($startDate)) {
             $state = $state->setStartDate($startDate);

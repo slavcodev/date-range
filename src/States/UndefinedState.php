@@ -6,9 +6,9 @@ use DateTimeInterface;
 use Zee\DateRange\DateRangeException;
 
 /**
- * Class UndefinedRange.
+ * State of the undefined range.
  */
-final class UndefinedRange extends RangeState
+final class UndefinedState extends RangeState
 {
     /**
      * {@inheritdoc}
@@ -31,7 +31,7 @@ final class UndefinedRange extends RangeState
      */
     public function setStartDate(DateTimeInterface $start): RangeState
     {
-        return new InfiniteEndRange($start);
+        return new InfiniteEndState($start);
     }
 
     /**
@@ -39,7 +39,7 @@ final class UndefinedRange extends RangeState
      */
     public function setEndDate(DateTimeInterface $end): RangeState
     {
-        return new InfiniteStartRange($end);
+        return new InfiniteStartState($end);
     }
 
     /**

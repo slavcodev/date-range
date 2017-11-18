@@ -5,7 +5,7 @@ namespace Zee\DateRange\States;
 use DateTimeInterface;
 
 /**
- * Interface RangeState.
+ * Date range abstract state.
  */
 abstract class RangeState
 {

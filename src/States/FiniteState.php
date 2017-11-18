@@ -6,9 +6,9 @@ use DateTimeInterface;
 use Zee\DateRange\DateRangeException;
 
 /**
- * Class FiniteRange.
+ * State of the finite range.
  */
-final class FiniteRange extends RangeState
+final class FiniteState extends RangeState
 {
     /**
      * @var DateTimeInterface
@@ -71,7 +71,7 @@ final class FiniteRange extends RangeState
      */
     public function setStartDate(DateTimeInterface $start): RangeState
     {
-        return new FiniteRange($start, $this->endDate);
+        return new FiniteState($start, $this->endDate);
     }
 
     /**
@@ -79,6 +79,6 @@ final class FiniteRange extends RangeState
      */
     public function setEndDate(DateTimeInterface $end): RangeState
     {
-        return new FiniteRange($this->startDate, $end);
+        return new FiniteState($this->startDate, $end);
     }
 }

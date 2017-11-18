@@ -20,7 +20,7 @@ use Zee\DateRange\DateRangeException;
 final class FiniteRangeTest extends TestCase
 {
     /**
-     * @var FiniteRange
+     * @var FiniteState
      */
     private $subject;
 
@@ -43,7 +43,7 @@ final class FiniteRangeTest extends TestCase
 
         $this->yesterday = new DateTimeImmutable('-1 day');
         $this->tomorrow = new DateTimeImmutable('+1 day');
-        $this->subject = new FiniteRange($this->yesterday, $this->tomorrow);
+        $this->subject = new FiniteState($this->yesterday, $this->tomorrow);
     }
 
     /**
@@ -53,8 +53,8 @@ final class FiniteRangeTest extends TestCase
     {
         self::assertTrue($this->subject->hasStartDate());
         self::assertTrue($this->subject->hasEndDate());
-        self::assertInstanceOf(FiniteRange::class, $this->subject->setStartDate(new DateTimeImmutable()));
-        self::assertInstanceOf(FiniteRange::class, $this->subject->setEndDate(new DateTimeImmutable()));
+        self::assertInstanceOf(FiniteState::class, $this->subject->setStartDate(new DateTimeImmutable()));
+        self::assertInstanceOf(FiniteState::class, $this->subject->setEndDate(new DateTimeImmutable()));
         self::assertSame($this->yesterday, $this->subject->getStartDate());
         self::assertSame($this->tomorrow, $this->subject->getEndDate());
         self::assertSame(0, $this->subject->compareStartDate($this->yesterday));
@@ -73,7 +73,7 @@ final class FiniteRangeTest extends TestCase
         $this->expectException(DateRangeException::class);
         $this->expectExceptionMessage('Invalid end date, must be after start');
 
-        new FiniteRange($this->tomorrow, $this->yesterday);
+        new FiniteState($this->tomorrow, $this->yesterday);
     }
 
     /**
@@ -84,6 +84,6 @@ final class FiniteRangeTest extends TestCase
         $this->expectException(DateRangeException::class);
         $this->expectExceptionMessage('Invalid end date, must be after start');
 
-        new FiniteRange($this->tomorrow, $this->tomorrow);
+        new FiniteState($this->tomorrow, $this->tomorrow);
     }
 }
