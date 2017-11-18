@@ -6,29 +6,21 @@ use DateTimeInterface;
 use Zee\DateRange\DateRangeException;
 
 /**
- * Class InfiniteEndRange.
+ * State of the range with infinite start.
  */
-final class InfiniteEndRange extends RangeState
+final class InfiniteStartState extends RangeState
 {
     /**
      * @var DateTimeInterface
      */
-    private $startDate;
+    private $endDate;
 
     /**
-     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
      */
-    public function __construct(DateTimeInterface $startDate)
+    public function __construct(DateTimeInterface $endDate)
     {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasStartDate(): bool
-    {
-        return true;
+        $this->endDate = $endDate;
     }
 
     /**
@@ -36,7 +28,7 @@ final class InfiniteEndRange extends RangeState
      */
     public function hasEndDate(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -44,7 +36,7 @@ final class InfiniteEndRange extends RangeState
      */
     public function getStartDate(): DateTimeInterface
     {
-        return $this->startDate;
+        throw new DateRangeException('Range start is undefined');
     }
 
     /**
@@ -52,7 +44,7 @@ final class InfiniteEndRange extends RangeState
      */
     public function getEndDate(): DateTimeInterface
     {
-        throw new DateRangeException('Range end is undefined');
+        return $this->endDate;
     }
 
     /**
@@ -60,7 +52,7 @@ final class InfiniteEndRange extends RangeState
      */
     public function setStartDate(DateTimeInterface $start): RangeState
     {
-        return new InfiniteEndRange($start);
+        return new FiniteState($start, $this->endDate);
     }
 
     /**
@@ -68,13 +60,13 @@ final class InfiniteEndRange extends RangeState
      */
     public function setEndDate(DateTimeInterface $end): RangeState
     {
-        return new FiniteRange($this->startDate, $end);
+        return new InfiniteStartState($end);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function formatEndDate(string $format = 'c'): ?string
+    public function formatStartDate(string $format = 'c'): ?string
     {
         return null;
     }

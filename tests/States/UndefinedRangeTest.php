@@ -20,7 +20,7 @@ use Zee\DateRange\DateRangeException;
 final class UndefinedRangeTest extends TestCase
 {
     /**
-     * @var UndefinedRange
+     * @var UndefinedState
      */
     private $subject;
 
@@ -31,7 +31,7 @@ final class UndefinedRangeTest extends TestCase
     {
         parent::setUp();
 
-        $this->subject = new UndefinedRange();
+        $this->subject = new UndefinedState();
     }
 
     /**
@@ -41,8 +41,8 @@ final class UndefinedRangeTest extends TestCase
     {
         self::assertFalse($this->subject->hasStartDate());
         self::assertFalse($this->subject->hasEndDate());
-        self::assertInstanceOf(InfiniteEndRange::class, $this->subject->setStartDate(new DateTimeImmutable()));
-        self::assertInstanceOf(InfiniteStartRange::class, $this->subject->setEndDate(new DateTimeImmutable()));
+        self::assertInstanceOf(InfiniteEndState::class, $this->subject->setStartDate(new DateTimeImmutable()));
+        self::assertInstanceOf(InfiniteStartState::class, $this->subject->setEndDate(new DateTimeImmutable()));
         self::assertNull($this->subject->formatStartDate());
         self::assertNull($this->subject->formatEndDate());
     }
