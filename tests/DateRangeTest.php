@@ -10,6 +10,7 @@
 
 namespace Zee\DateRange;
 
+use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
 use DomainException;
@@ -278,5 +279,33 @@ class DateRangeTest extends TestCase
         $dump = print_r($range, true);
 
         self::assertNotContains('state', $dump);
+    }
+
+    /**
+     * @test
+     */
+    public function getDateInterval()
+    {
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $range = new DateRange($yesterday, $tomorrow);
+        $interval = $range->getDateInterval();
+
+        self::assertSame(2, $interval->days);
+    }
+
+    /**
+     * @test
+     */
+    public function getDatePeriod()
+    {
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $range = new DateRange($yesterday, $tomorrow);
+        $period = $range->getDatePeriod(new DateInterval('P1D'));
+
+        self::assertSame($range->getStartTime()->getTimestamp(), $period->getStartDate()->getTimestamp());
+        self::assertSame($range->getEndTime()->getTimestamp(), $period->getEndDate()->getTimestamp());
+        self::assertSame(2, iterator_count($period));
     }
 }

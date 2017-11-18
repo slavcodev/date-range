@@ -10,6 +10,8 @@
 
 namespace Zee\DateRange;
 
+use DateInterval;
+use DatePeriod;
 use DateTimeInterface;
 
 /**
@@ -101,4 +103,22 @@ interface DateRangeInterface
      * @return bool
      */
     public function isEnded(): bool;
+
+    /**
+     * Returns the range interval.
+     *
+     * @return DateInterval
+     */
+    public function getDateInterval(): DateInterval;
+
+    /**
+     * Allows iteration over a set of dates and times,
+     * recurring at regular intervals, over the range.
+     *
+     * @param DateInterval $interval
+     * @param int $option
+     *
+     * @return DatePeriod
+     */
+    public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod;
 }
