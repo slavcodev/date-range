@@ -13,6 +13,7 @@ namespace Zee\DateRange;
 use DateInterval;
 use DatePeriod;
 use DateTimeInterface;
+use Traversable;
 
 /**
  * Date range interface.
@@ -118,7 +119,14 @@ interface DateRangeInterface
      * @param DateInterval $interval
      * @param int $option
      *
-     * @return DatePeriod
+     * @return DatePeriod|DateTimeInterface[]
      */
     public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod;
+
+    /**
+     * @param DateInterval $interval
+     *
+     * @return Traversable
+     */
+    public function split(DateInterval $interval): Traversable;
 }

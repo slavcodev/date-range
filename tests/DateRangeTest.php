@@ -302,10 +302,30 @@ class DateRangeTest extends TestCase
         $yesterday = new DateTimeImmutable('-1 day');
         $tomorrow = new DateTimeImmutable('+1 day');
         $range = new DateRange($yesterday, $tomorrow);
-        $period = $range->getDatePeriod(new DateInterval('P1D'));
+        $interval = new DateInterval('P1D');
+        $period = $range->getDatePeriod($interval);
 
         self::assertSame($range->getStartTime()->getTimestamp(), $period->getStartDate()->getTimestamp());
         self::assertSame($range->getEndTime()->getTimestamp(), $period->getEndDate()->getTimestamp());
         self::assertSame(2, iterator_count($period));
+    }
+
+    /**
+     * @test
+     */
+    public function splitRange()
+    {
+        $yesterday = new DateTimeImmutable('-1 day');
+        $tomorrow = new DateTimeImmutable('+1 day');
+        $range = new DateRange($yesterday, $tomorrow);
+        $interval = new DateInterval('P1D');
+
+        $ranges = $range->split($interval);
+
+        self::assertSame(2, iterator_count($ranges));
+
+        foreach ($range->split($interval) as $range) {
+            self::assertInstanceOf(DateRange::class, $range);
+        }
     }
 }
