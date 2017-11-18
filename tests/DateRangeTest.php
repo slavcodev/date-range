@@ -33,8 +33,8 @@ class DateRangeTest extends TestCase
         self::assertFalse($actual->hasEndTime());
         self::assertFalse($actual->isStarted());
         self::assertFalse($actual->isEnded());
-        self::assertFalse($actual->isStartAt($now));
-        self::assertFalse($actual->isEndAt($now));
+        self::assertFalse($actual->isStartedAt($now));
+        self::assertFalse($actual->isEndedAt($now));
         self::assertSame('-/-', (string) $actual);
         self::assertSame(
             json_encode(['startTime' => null, 'endTime' => null]),
@@ -117,9 +117,9 @@ class DateRangeTest extends TestCase
         self::assertFalse($actual->hasEndTime());
         self::assertTrue($actual->isStarted());
         self::assertFalse($actual->isEnded());
-        self::assertTrue($actual->isStartAt($now));
-        self::assertFalse($actual->isStartAt($tomorrow));
-        self::assertFalse($actual->isEndAt($now));
+        self::assertTrue($actual->isStartedAt($now));
+        self::assertFalse($actual->isStartedAt($tomorrow));
+        self::assertFalse($actual->isEndedAt($now));
         self::assertSame("{$now->format('c')}/-", (string) $actual);
         self::assertSame(
             json_encode(['startTime' => $now->format('c'), 'endTime' => null]),
@@ -165,9 +165,9 @@ class DateRangeTest extends TestCase
         self::assertTrue($actual->hasEndTime());
         self::assertTrue($actual->isStarted());
         self::assertFalse($actual->isEnded());
-        self::assertFalse($actual->isStartAt($now));
-        self::assertTrue($actual->isEndAt($now));
-        self::assertFalse($actual->isEndAt($yesterday));
+        self::assertFalse($actual->isStartedAt($now));
+        self::assertTrue($actual->isEndedAt($now));
+        self::assertFalse($actual->isEndedAt($yesterday));
         self::assertSame("-/{$now->format('c')}", (string) $actual);
         self::assertSame(
             json_encode(['startTime' => null, 'endTime' => $now->format('c')]),
@@ -215,10 +215,10 @@ class DateRangeTest extends TestCase
         self::assertTrue($actual->hasEndTime());
         self::assertTrue($actual->isStarted());
         self::assertFalse($actual->isEnded());
-        self::assertFalse($actual->isStartAt($now));
-        self::assertTrue($actual->isStartAt($yesterday));
-        self::assertFalse($actual->isEndAt($now));
-        self::assertTrue($actual->isEndAt($tomorrow));
+        self::assertFalse($actual->isStartedAt($now));
+        self::assertTrue($actual->isStartedAt($yesterday));
+        self::assertFalse($actual->isEndedAt($now));
+        self::assertTrue($actual->isEndedAt($tomorrow));
         self::assertSame("{$yesterday->format('c')}/{$tomorrow->format('c')}", (string) $actual);
         self::assertSame(
             json_encode(['startTime' => $yesterday->format('c'), 'endTime' => $tomorrow->format('c')]),
