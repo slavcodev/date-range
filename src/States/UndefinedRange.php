@@ -8,40 +8,8 @@ use Zee\DateRange\DateRangeException;
 /**
  * Class UndefinedRange.
  */
-class UndefinedRange implements RangeState
+final class UndefinedRange extends RangeState
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
-    {
-        return '-/-';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize(): array
-    {
-        return ['startTime' => null, 'endTime' => null];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasStartTime(): bool
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasEndTime(): bool
-    {
-        return false;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -77,16 +45,16 @@ class UndefinedRange implements RangeState
     /**
      * {@inheritdoc}
      */
-    public function compareStartTime(DateTimeInterface $time): int
+    public function formatStartTime(string $format = 'c'): ?string
     {
-        throw new DateRangeException('Range start is undefined');
+        return null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function compareEndTime(DateTimeInterface $time): int
+    public function formatEndTime(string $format = 'c'): ?string
     {
-        throw new DateRangeException('Range end is undefined');
+        return null;
     }
 }

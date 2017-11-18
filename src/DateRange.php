@@ -55,7 +55,11 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function __toString(): string
     {
-        return (string) $this->state;
+        return sprintf(
+            '%s/%s',
+            $this->state->formatStartTime('c') ?: '-',
+            $this->state->formatEndTime('c') ?: '-'
+        );
     }
 
     /**
@@ -82,7 +86,10 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return $this->state->jsonSerialize();
+        return [
+            'startTime' => $this->state->formatStartTime(),
+            'endTime' => $this->state->formatEndTime(),
+        ];
     }
 
     /**

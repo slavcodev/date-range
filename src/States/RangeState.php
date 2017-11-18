@@ -3,58 +3,51 @@
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
-use JsonSerializable;
 
 /**
  * Interface RangeState.
  */
-interface RangeState extends JsonSerializable
+abstract class RangeState
 {
     /**
-     * Returns string representation of range.
-     *
-     * @return string
+     * @return bool
      */
-    public function __toString(): string;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize(): array;
+    public function hasStartTime(): bool
+    {
+        return false;
+    }
 
     /**
      * @return bool
      */
-    public function hasStartTime(): bool;
-
-    /**
-     * @return bool
-     */
-    public function hasEndTime(): bool;
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getStartTime(): DateTimeInterface;
+    public function hasEndTime(): bool
+    {
+        return false;
+    }
 
     /**
      * @return DateTimeInterface
      */
-    public function getEndTime(): DateTimeInterface;
+    abstract public function getStartTime(): DateTimeInterface;
+
+    /**
+     * @return DateTimeInterface
+     */
+    abstract public function getEndTime(): DateTimeInterface;
 
     /**
      * @param DateTimeInterface $time
      *
      * @return RangeState
      */
-    public function setStartTime(DateTimeInterface $time): RangeState;
+    abstract public function setStartTime(DateTimeInterface $time): RangeState;
 
     /**
      * @param DateTimeInterface $time
      *
      * @return RangeState
      */
-    public function setEndTime(DateTimeInterface $time): RangeState;
+    abstract public function setEndTime(DateTimeInterface $time): RangeState;
 
     /**
      * Compares start time with specific time.
@@ -66,7 +59,10 @@ interface RangeState extends JsonSerializable
      *
      * @return int
      */
-    public function compareStartTime(DateTimeInterface $time): int;
+    public function compareStartTime(DateTimeInterface $time): int
+    {
+        return $this->getStartTime()->getTimestamp() <=> $time->getTimestamp();
+    }
 
     /**
      * Compares end time with specific time.
@@ -78,5 +74,28 @@ interface RangeState extends JsonSerializable
      *
      * @return int
      */
-    public function compareEndTime(DateTimeInterface $time): int;
+    public function compareEndTime(DateTimeInterface $time): int
+    {
+        return $this->getEndTime()->getTimestamp() <=> $time->getTimestamp();
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function formatStartTime(string $format = 'c'): ?string
+    {
+        return $this->getStartTime()->format($format);
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return null|string
+     */
+    public function formatEndTime(string $format = 'c'): ?string
+    {
+        return $this->getEndTime()->format($format);
+    }
 }
