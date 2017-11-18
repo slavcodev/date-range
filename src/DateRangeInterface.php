@@ -113,8 +113,9 @@ interface DateRangeInterface
     public function getDateInterval(): DateInterval;
 
     /**
-     * Allows iteration over a set of dates and times,
-     * recurring at regular intervals, over the range.
+     * Returns date period according to a given interval.
+     *
+     * Allows iteration over the range.
      *
      * @param DateInterval $interval
      * @param int $option
@@ -124,6 +125,13 @@ interface DateRangeInterface
     public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod;
 
     /**
+     * Splits range into smaller ranges according to a given interval.
+     *
+     * All resulting ranges (except first and last) starts on same date as previously ends.
+     * The first starts on same date as parent range, last ends on same date as parent range.
+     *
+     * Keep in mind that the last range may be equal or lesser than the given interval.
+     *
      * @param DateInterval $interval
      *
      * @return Traversable
