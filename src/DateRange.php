@@ -10,6 +10,7 @@
 
 namespace Zee\DateRange;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 use JsonSerializable;
 use Zee\DateRange\States\RangeState;
@@ -140,7 +141,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function isStartAt(DateTimeInterface $time): bool
     {
-        return $this->state->isStartAt($time);
+        return $this->hasStartTime() && $this->state->compareStartTime($time) === 0;
     }
 
     /**
@@ -148,7 +149,7 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function isEndAt(DateTimeInterface $time): bool
     {
-        return $this->state->isEndAt($time);
+        return $this->hasEndTime() && $this->state->compareEndTime($time) === 0;
     }
 
     /**
@@ -156,7 +157,11 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function isStarted(): bool
     {
-        return $this->state->isStarted();
+        if ($this->hasStartTime()) {
+            return $this->state->compareStartTime(new DateTimeImmutable()) <= 0;
+        } else {
+            return $this->hasEndTime();
+        }
     }
 
     /**
@@ -164,6 +169,6 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      */
     public function isEnded(): bool
     {
-        return $this->state->isEnded();
+        return $this->hasEndTime() && $this->state->compareEndTime(new DateTimeImmutable()) < 0;
     }
 }

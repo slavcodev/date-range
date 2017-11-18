@@ -2,7 +2,6 @@
 
 namespace Zee\DateRange\States;
 
-use DateTimeImmutable;
 use DateTimeInterface;
 use Zee\DateRange\DateRangeException;
 
@@ -43,25 +42,9 @@ final class InfiniteStartRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function hasStartTime(): bool
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hasEndTime(): bool
     {
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getStartTime(): DateTimeInterface
-    {
-        throw new DateRangeException('Date range is undefined');
     }
 
     /**
@@ -91,24 +74,8 @@ final class InfiniteStartRange extends UndefinedRange
     /**
      * {@inheritdoc}
      */
-    public function isEndAt(DateTimeInterface $time): bool
+    public function compareEndTime(DateTimeInterface $time): int
     {
-        return $this->endTime->getTimestamp() === $time->getTimestamp();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isStarted(): bool
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnded(): bool
-    {
-        return $this->endTime <= new DateTimeImmutable();
+        return $this->endTime->getTimestamp() <=> $time->getTimestamp();
     }
 }

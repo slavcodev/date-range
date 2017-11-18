@@ -47,7 +47,7 @@ class UndefinedRange implements RangeState
      */
     public function getStartTime(): DateTimeInterface
     {
-        throw new DateRangeException('Date range is undefined');
+        throw new DateRangeException('Range start is undefined');
     }
 
     /**
@@ -55,7 +55,7 @@ class UndefinedRange implements RangeState
      */
     public function getEndTime(): DateTimeInterface
     {
-        throw new DateRangeException('Date range is undefined');
+        throw new DateRangeException('Range end is undefined');
     }
 
     /**
@@ -77,32 +77,16 @@ class UndefinedRange implements RangeState
     /**
      * {@inheritdoc}
      */
-    public function isStartAt(DateTimeInterface $time): bool
+    public function compareStartTime(DateTimeInterface $time): int
     {
-        return false;
+        throw new DateRangeException('Range start is undefined');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEndAt(DateTimeInterface $time): bool
+    public function compareEndTime(DateTimeInterface $time): int
     {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isStarted(): bool
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnded(): bool
-    {
-        return false;
+        throw new DateRangeException('Range end is undefined');
     }
 }
