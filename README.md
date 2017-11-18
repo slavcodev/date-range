@@ -152,6 +152,10 @@ composer install
 phpunit
 ```
 
+## Contributing
+
+Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for details.
+
 ## Credits
 
 - [Veaceslav Medvedev](https://github.com/slavcodev)
