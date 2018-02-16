@@ -18,14 +18,19 @@ Security - in case of vulnerabilities.
 
 _TBD_
 
+## [0.4.0] 2018-02-16
+
+### Added
+- Added new method `getTimestampInterval` to returns duration in seconds ([#18](../../pull/18)).
+
 ## [0.3.0] 2017-11-18
 
 ### Added
-- Added new methods `getInterval`, `getPeriod`, `split`
-- Added `DateRangeProvider` interface and basic provider `FiniteDateRangeProvider`
+- Added `DateRangeProvider` interface and basic provider `FiniteDateRangeProvider` ([#13](../../pull/13)).
+- Added new method `getDateInterval`, `getDatePeriod`, `split` ([#9](../../pull/9)).
 
 ### Changed
-- Rename methods from using `time` ot `date`.
+- Rename methods from using `time` ot `date` ([#11](../../pull/11)).
 - Refactored internals.
 
 ## [0.1.1] 2017-11-17
