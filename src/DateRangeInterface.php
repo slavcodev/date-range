@@ -113,6 +113,13 @@ interface DateRangeInterface
     public function isEnded(): bool;
 
     /**
+     * Returns the range duration in seconds.
+     *
+     * @return int
+     */
+    public function getTimestampInterval(): int;
+
+    /**
      * Returns the range interval.
      *
      * @return DateInterval

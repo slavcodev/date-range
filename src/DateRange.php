@@ -193,6 +193,14 @@ final class DateRange implements DateRangeInterface, JsonSerializable
     /**
      * {@inheritdoc}
      */
+    public function getTimestampInterval(): int
+    {
+        return $this->getEndDate()->getTimestamp() - $this->getStartDate()->getTimestamp();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDateInterval(): DateInterval
     {
         return $this->getStartDate()->diff($this->getEndDate());

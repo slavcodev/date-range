@@ -114,6 +114,19 @@ final class DateRangeTest extends TestCase
     /**
      * @test
      */
+    public function getTimestampInterval()
+    {
+        $now = new DateTimeImmutable();
+        $oneHourRange = new DateRange($now, $now->add(new DateInterval('PT1H')));
+        $oneDayRange = new DateRange($now, $now->add(new DateInterval('P1D')));
+
+        self::assertSame(3600, $oneHourRange->getTimestampInterval());
+        self::assertSame(86400, $oneDayRange->getTimestampInterval());
+    }
+
+    /**
+     * @test
+     */
     public function getDateInterval()
     {
         $yesterday = new DateTimeImmutable('-1 day');
