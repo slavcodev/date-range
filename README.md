@@ -42,6 +42,8 @@ $range->isEnded();
 $range->isStartedOn(new DateTime());
 // Checking if range ended on specific date
 $range->isEndedOn(new DateTime());
+// Accessing range duration in seconds
+$range->getTimestampInterval();
 // Accessing range interval
 $range->getDateInterval()->format('%s');
 // Printing
