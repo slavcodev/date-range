@@ -13,7 +13,7 @@ Implementation of the **Date Range** missing in PHP.
 Using [Composer](https://getcomposer.org)
 
 ```bash
-composer require z-ee/date-range
+composer require zeeproject/date-range
 ```
 
 ## Usage
@@ -168,13 +168,13 @@ Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](
 
 The BSD 2-Clause License. Please see [LICENSE][link-license] for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/z-ee/date-range.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/zeeproject/date-range.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/License-BSD%202--Clause-blue.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/zee/date-range/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/zee/date-range.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/zee/date-range.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/z-ee/date-range
+[link-packagist]: https://packagist.org/packages/zeeproject/date-range
 [link-license]: LICENSE
 [link-travis]: https://travis-ci.org/zee/date-range
 [link-scrutinizer]: https://scrutinizer-ci.com/g/zee/date-range/code-structure
