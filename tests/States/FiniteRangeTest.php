@@ -78,14 +78,12 @@ final class FiniteRangeTest extends TestCase
 
     /**
      * @test
-     * @depends checkFiniteState
      */
-    public function rangeMayBeEmptyWhenEndsExactlyAtStart()
+    public function guardRangeDatesDifference()
     {
-        $subject = new FiniteState($this->tomorrow, $this->tomorrow);
-        self::assertTrue($subject->hasStartDate());
-        self::assertTrue($subject->hasEndDate());
-        self::assertSame($this->tomorrow, $subject->getStartDate());
-        self::assertSame($this->tomorrow, $subject->getEndDate());
+        $this->expectException(DateRangeException::class);
+        $this->expectExceptionMessage('Invalid end date, must be after start');
+
+        new FiniteState($this->tomorrow, $this->tomorrow);
     }
 }

@@ -26,7 +26,7 @@ final class FiniteState extends RangeState
      */
     public function __construct(DateTimeInterface $startDate, DateTimeInterface $endDate)
     {
-        if ($endDate < $startDate) {
+        if ($endDate <= $startDate) {
             throw new DateRangeException('Invalid end date, must be after start');
         }
 
