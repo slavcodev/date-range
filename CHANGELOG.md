@@ -19,7 +19,7 @@ Security - in case of vulnerabilities.
 _TBD_
 
 ### Changed
-- Changed constraint to allow empty ranges, allowing you to use the end time exactly the same as the start time. ([#18](../../pull/19)).
+- Added support of empty ranges, allowing you to use the end time exactly the same as the start time. ([#18](../../pull/19)).
 
 ## [0.4.0] 2018-02-16
 
