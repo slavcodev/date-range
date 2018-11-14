@@ -18,9 +18,6 @@ Security - in case of vulnerabilities.
 
 _TBD_
 
-### Changed
-- Added support of empty ranges, allowing you to use the end time exactly the same as the start time. ([#18](../../pull/19)).
-
 ## [0.4.0] 2018-02-16
 
 ### Added
