@@ -147,26 +147,12 @@ class ReportCalculator
 ## Testing
 
 ```bash
-# install required files
-composer self-update
-composer install
-
-# run the test (from project root)
 phpunit
 ```
 
 ## Contributing
 
-Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for details.
-
-## Credits
-
-- [Veaceslav Medvedev](https://github.com/slavcodev)
-- [All Contributors](../../contributors)
-
-## License
-
-The BSD 2-Clause License. Please see [LICENSE][link-license] for more information.
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for more details.
 
 [ico-version]: https://img.shields.io/packagist/v/zeeproject/date-range.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/License-BSD%202--Clause-blue.svg?style=flat-square
