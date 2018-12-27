@@ -9,6 +9,7 @@ matrix:
       env:
         - EXECUTE_COVERAGE=true
     - php: 7.2
+    - php: 7.3
 
 notifications:
   email: false
@@ -27,4 +28,4 @@ script:
   - if [[ $EXECUTE_COVERAGE != 'true' ]]; then ./vendor/bin/phpunit ; fi
 
 after_script:
-  - if [[ $EXECUTE_COVERAGE == 'true' ]]; then ./vendor/bin/ocular code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
+  - if [[ $EXECUTE_COVERAGE == 'true' ]]; then ./vendor/bin/ocular code-coverage:upload --format=clover ./build/logs/clover.xml; fi
