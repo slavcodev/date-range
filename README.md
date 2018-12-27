@@ -1,10 +1,13 @@
 # Date Range
 
+[![Build Status][ico-travis]][link-travis]
+[![Code Coverage][ico-scrutinizer]][link-scrutinizer]
+[![Quality Score][ico-code-quality]][link-code-quality]
+[![GitHub issues][ico-issues]][link-issues]
+
 [![Software License][ico-license]][link-license]
 [![Latest Version on Packagist][ico-version]][link-packagist]
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
+[![PHP Version][ico-php-version]][link-github]
 
 Implementation of the **Date Range** missing in PHP.
 
@@ -147,34 +150,24 @@ class ReportCalculator
 ## Testing
 
 ```bash
-# install required files
-composer self-update
-composer install
-
-# run the test (from project root)
 phpunit
 ```
 
 ## Contributing
 
-Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for more details.
 
-## Credits
-
-- [Veaceslav Medvedev](https://github.com/slavcodev)
-- [All Contributors](../../contributors)
-
-## License
-
-The BSD 2-Clause License. Please see [LICENSE][link-license] for more information.
-
-[ico-version]: https://img.shields.io/packagist/v/zeeproject/date-range.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/License-BSD%202--Clause-blue.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/zee/date-range/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/zee/date-range.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/zee/date-range.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/zeeproject/date-range.svg?style=for-the-badge&label=Latest
+[ico-php-version]: https://img.shields.io/packagist/php-v/zeeproject/date-range.svg?style=for-the-badge
+[ico-license]: https://img.shields.io/badge/License-BSD%202--Clause-blue.svg?style=for-the-badge
+[ico-issues]: https://img.shields.io/github/issues/zee/date-range.svg?style=for-the-badge&logo=github
+[ico-travis]: https://img.shields.io/travis/zee/date-range.svg?style=for-the-badge&logo=travis
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/zee/date-range.svg?style=for-the-badge&logo=scrutinizer
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/zee/date-range.svg?style=for-the-badge&logo=scrutinizer
 
 [link-packagist]: https://packagist.org/packages/zeeproject/date-range
+[link-github]: https://github.com/zee/date-range
+[link-issues]: https://github.com/zee/date-range/issues
 [link-license]: LICENSE
 [link-travis]: https://travis-ci.org/zee/date-range
 [link-scrutinizer]: https://scrutinizer-ci.com/g/zee/date-range/code-structure

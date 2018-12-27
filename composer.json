@@ -2,15 +2,24 @@
   "name": "zeeproject/date-range",
   "description": "Date range implementation",
   "license": "BSD-2-Clause",
+  "homepage": "https://github.com/zee/date-range",
   "keywords": [
     "date range"
   ],
   "authors": [
     {
       "name": "Veaceslav Medvedev",
-      "email": "slavcopost@gmail.com"
+      "email": "slavcopost@gmail.com",
+      "homepage": "https://github.com/slavcodev"
+    },
+    {
+      "name": "All awesome contributors",
+      "homepage": "https://github.com/zee/exceptions/graphs/contributors"
     }
   ],
+  "config": {
+    "sort-packages": true
+  },
   "require": {
     "php": "^7.1",
     "ext-json": "*"
