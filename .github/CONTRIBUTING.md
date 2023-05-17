@@ -13,7 +13,7 @@ The contribution is accepted via Pull Requests
 - **Consider our release cycle** - We try to follow [SemVer v2.0.0](http://semver.org/).
     Randomly breaking public APIs is not an option.
 
-- **Create feature branches** - Don't ask us to pull from your master branch, create branch, e.g. `feature-name` or `bugfix-title`.
+- **Create feature branches** - Don't ask us to pull from your main branch, create branch, e.g. `feature-name` or `bugfix-title`.
 
 - **One pull request per feature** - If you want to do more than one thing, send multiple pull requests. Use appropriate labels.
 
@@ -31,10 +31,8 @@ $ phpunit
 
 ## Project's standards
 
- * [PSR-1: Basic Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
- * [PSR-2: Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
- * [PSR-4: Autoloading Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md)
- * [PSR-5: PHPDoc (draft)](https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md)
+ * [PSR-1: Basic Coding Standard](https://www.php-fig.org/psr/psr-1/)
+ * [PSR-12: Extended Coding Style Guide](https://www.php-fig.org/psr/psr-12/)
  * Keep the order of class elements: static properties, instance properties, constructor (or setUp for PHPUnit), destructor (or tearDown for PHPUnit), static methods, instance methods, magic static methods, magic instance methods.
 
 
