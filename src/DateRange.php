@@ -8,6 +8,8 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange;
 
 use DateInterval;
@@ -19,30 +21,27 @@ use Traversable;
 use Zee\DateRange\States\RangeState;
 use Zee\DateRange\States\UndefinedState;
 
+use function sprintf;
+
 /**
  * Implementation of date range value object.
  */
 final class DateRange implements DateRangeInterface, JsonSerializable
 {
-    /**
-     * @var RangeState
-     */
-    private $state;
+    private RangeState $state;
 
-    /**
-     * @param DateTimeInterface|null $startDate
-     * @param DateTimeInterface|null $endDate
-     */
-    public function __construct(DateTimeInterface $startDate = null, DateTimeInterface $endDate = null)
-    {
+    public function __construct(
+        null|DateTimeInterface $startDate = null,
+        null|DateTimeInterface $endDate = null,
+    ) {
         $state = new UndefinedState();
 
         if (isset($startDate)) {
-            $state = $state->setStartDate($startDate);
+            $state = $state->withStartDate($startDate);
         }
 
         if (isset($endDate)) {
-            $state = $state->setEndDate($endDate);
+            $state = $state->withEndDate($endDate);
         }
 
         $this->state = $state;
@@ -50,8 +49,6 @@ final class DateRange implements DateRangeInterface, JsonSerializable
 
     /**
      * Returns string representation of range.
-     *
-     * {@inheritdoc}
      */
     public function __toString(): string
     {
@@ -62,9 +59,6 @@ final class DateRange implements DateRangeInterface, JsonSerializable
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __debugInfo()
     {
         return [
@@ -81,8 +75,6 @@ final class DateRange implements DateRangeInterface, JsonSerializable
      * Returns value ready to be encoded as JSON.
      *
      * The ISO-8601 range format is used for times.
-     *
-     * {@inheritdoc}
      */
     public function jsonSerialize(): array
     {
@@ -92,131 +84,89 @@ final class DateRange implements DateRangeInterface, JsonSerializable
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasStartDate(): bool
     {
         return $this->state->hasStartDate();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasEndDate(): bool
     {
         return $this->state->hasEndDate();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStartDate(): DateTimeInterface
     {
         return $this->state->getStartDate();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEndDate(): DateTimeInterface
     {
         return $this->state->getEndDate();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStartDate(DateTimeInterface $start): DateRangeInterface
     {
         $clone = clone $this;
-        $clone->state = $clone->state->setStartDate($start);
+        $clone->state = $clone->state->withStartDate($start);
 
         return $clone;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setEndDate(DateTimeInterface $end): DateRangeInterface
     {
         $clone = clone $this;
-        $clone->state = $clone->state->setEndDate($end);
+        $clone->state = $clone->state->withEndDate($end);
 
         return $clone;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFinite(): bool
     {
         return $this->hasStartDate() && $this->hasEndDate();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isStartedOn(DateTimeInterface $date): bool
     {
         return $this->hasStartDate() && $this->state->compareStartDate($date) === 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEndedOn(DateTimeInterface $date): bool
     {
         return $this->hasEndDate() && $this->state->compareEndDate($date) === 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isStarted(): bool
     {
         if ($this->hasStartDate()) {
             return $this->state->compareStartDate(new DateTimeImmutable()) <= 0;
-        } else {
-            return !$this->isEnded();
         }
+
+        return ! $this->isEnded();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEnded(): bool
     {
         return $this->hasEndDate() && $this->state->compareEndDate(new DateTimeImmutable()) < 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTimestampInterval(): int
     {
         return $this->getEndDate()->getTimestamp() - $this->getStartDate()->getTimestamp();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDateInterval(): DateInterval
     {
         return $this->getStartDate()->diff($this->getEndDate());
     }
 
     /**
-     * {@inheritdoc}
+     * @psalm-suppress ArgumentTypeCoercion
      */
     public function getDatePeriod(DateInterval $interval, int $option = 0): DatePeriod
     {
         return new DatePeriod($this->getStartDate(), $interval, $this->getEndDate(), $option);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function split(DateInterval $interval): Traversable
     {
         $startDate = $this->getStartDate();
@@ -224,10 +174,10 @@ final class DateRange implements DateRangeInterface, JsonSerializable
         $period = $this->getDatePeriod($interval, DatePeriod::EXCLUDE_START_DATE);
 
         foreach ($period as $date) {
-            yield new DateRange($startDate, $date);
+            yield new self($startDate, $date);
             $startDate = $date;
         }
 
-        yield new DateRange($startDate, $endDate);
+        yield new self($startDate, $endDate);
     }
 }

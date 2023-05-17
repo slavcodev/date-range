@@ -1,79 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
-use Zee\DateRange\DateRangeException;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
 
 /**
  * State of the range with infinite end.
+ *
+ * @internal
+ *
+ * @psalm-internal Zee\DateRange
  */
 final class InfiniteEndState extends RangeState
 {
-    /**
-     * @var DateTimeInterface
-     */
-    private $startDate;
-
-    /**
-     * @param DateTimeInterface $startDate
-     */
-    public function __construct(DateTimeInterface $startDate)
-    {
-        $this->startDate = $startDate;
+    public function __construct(
+        private readonly DateTimeInterface $startDate,
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasStartDate(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasEndDate(): bool
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStartDate(): DateTimeInterface
     {
         return $this->startDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndDate(): DateTimeInterface
+    public function getEndDate(): never
     {
-        throw new DateRangeException('Range end is undefined');
+        throw new InvalidDateRangeDateRangeException('Range end is undefined');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStartDate(DateTimeInterface $start): RangeState
+    public function withStartDate(DateTimeInterface $start): RangeState
     {
-        return new InfiniteEndState($start);
+        return new self($start);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEndDate(DateTimeInterface $end): RangeState
+    public function withEndDate(DateTimeInterface $end): RangeState
     {
         return new FiniteState($this->startDate, $end);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function formatEndDate(string $format = 'c'): ?string
     {
         return null;

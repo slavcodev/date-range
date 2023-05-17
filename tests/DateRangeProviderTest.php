@@ -8,34 +8,28 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Zee\DateRange\Providers\FiniteDateRangeProvider;
 
-/**
- * Class DateRangeProviderTest.
- */
+#[CoversClass(FiniteDateRangeProvider::class)]
 final class DateRangeProviderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function usingBuilder()
+    #[Test]
+    public function usingBuilder(): void
     {
         $yesterday = new DateTimeImmutable('-1 day');
         $tomorrow = new DateTimeImmutable('+1 day');
-        $calculator = function (FiniteDateRangeProvider $dateRangeProvider) {
-            $range = $dateRangeProvider->getDateRange();
-            $interval = $range->getDateInterval();
-
-            return $interval->days;
-        };
+        $calculator = fn (FiniteDateRangeProvider $dateRangeProvider): int => (int) $dateRangeProvider->getDateRange()->getDateInterval()->days;
 
         $dateRangeProvider = new FiniteDateRangeProvider($yesterday, $tomorrow);
         $result = $calculator($dateRangeProvider);
 
-        self::assertSame(2, $result);
+        $this->assertSame(2, $result);
     }
 }

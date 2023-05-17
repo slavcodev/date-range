@@ -8,6 +8,8 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\Providers;
 
 use DateTimeInterface;
@@ -18,31 +20,14 @@ use Zee\DateRange\DateRangeProvider;
 /**
  * Finite date range provider.
  */
-final class FiniteDateRangeProvider implements DateRangeProvider
+final readonly class FiniteDateRangeProvider implements DateRangeProvider
 {
-    /**
-     * @var DateTimeInterface
-     */
-    private $startDate;
-
-    /**
-     * @var DateTimeInterface
-     */
-    private $endDate;
-
-    /**
-     * @param DateTimeInterface $startDate
-     * @param DateTimeInterface $endDate
-     */
-    public function __construct(DateTimeInterface $startDate, DateTimeInterface $endDate)
-    {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+    public function __construct(
+        private DateTimeInterface $startDate,
+        private DateTimeInterface $endDate,
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDateRange(): DateRangeInterface
     {
         return new DateRange($this->startDate, $this->endDate);

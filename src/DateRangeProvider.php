@@ -8,6 +8,8 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange;
 
 /**

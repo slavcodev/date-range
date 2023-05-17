@@ -18,19 +18,30 @@ Security - in case of vulnerabilities.
 
 _TBD_
 
+## [0.5.0] 2023-05-17
+
+### Changed
+- Changed license to `MIT`.
+- Increased minimum version of the PHP to v8.2.
+- Enable strict mode for all code.
+- Migrated from TravisCI to GitHub actions.
+- Upgraded PhpUnit to v10.
+- Renamed the interface `Exception` to `DateRangeException`.
+- Renamed the class `DateRangeException` to `InvalidDateRangeDateRangeException`.
+
 ## [0.4.0] 2018-02-16
 
 ### Added
-- Added new method `getTimestampInterval` to returns duration in seconds ([#18](../../pull/18)).
+- Added new method `getTimestampInterval` to returns duration in seconds.
 
 ## [0.3.0] 2017-11-18
 
 ### Added
-- Added `DateRangeProvider` interface and basic provider `FiniteDateRangeProvider` ([#13](../../pull/13)).
-- Added new method `getDateInterval`, `getDatePeriod`, `split` ([#9](../../pull/9)).
+- Added `DateRangeProvider` interface and basic provider `FiniteDateRangeProvider`.
+- Added new method `getDateInterval`, `getDatePeriod`, `split`.
 
 ### Changed
-- Rename methods from using `time` ot `date` ([#11](../../pull/11)).
+- Rename methods from using `time` ot `date`.
 - Refactored internals.
 
 ## [0.1.1] 2017-11-17

@@ -1,63 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
 
 /**
  * Date range abstract state.
+ *
+ * @internal
+ *
+ * @psalm-internal Zee\DateRange
  */
 abstract class RangeState
 {
-    /**
-     * @return bool
-     */
     public function hasStartDate(): bool
     {
         return false;
     }
 
-    /**
-     * @return bool
-     */
     public function hasEndDate(): bool
     {
         return false;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     abstract public function getStartDate(): DateTimeInterface;
 
-    /**
-     * @return DateTimeInterface
-     */
     abstract public function getEndDate(): DateTimeInterface;
 
-    /**
-     * @param DateTimeInterface $start
-     *
-     * @return RangeState
-     */
-    abstract public function setStartDate(DateTimeInterface $start): RangeState;
+    abstract public function withStartDate(DateTimeInterface $start): self;
 
-    /**
-     * @param DateTimeInterface $end
-     *
-     * @return RangeState
-     */
-    abstract public function setEndDate(DateTimeInterface $end): RangeState;
+    abstract public function withEndDate(DateTimeInterface $end): self;
 
     /**
      * Compares start date with specific date.
      *
      * Returns 0 if dates are equals, negative if start date is less than given date,
      * and positive if start date is greater.
-     *
-     * @param DateTimeInterface $date
-     *
-     * @return int
      */
     public function compareStartDate(DateTimeInterface $date): int
     {
@@ -69,32 +49,18 @@ abstract class RangeState
      *
      * Returns 0 if dates are equals, negative if end date is less than given date
      * and positive if end date is greater.
-     *
-     * @param DateTimeInterface $date
-     *
-     * @return int
      */
     public function compareEndDate(DateTimeInterface $date): int
     {
         return $this->getEndDate()->getTimestamp() <=> $date->getTimestamp();
     }
 
-    /**
-     * @param string $format
-     *
-     * @return null|string
-     */
-    public function formatStartDate(string $format = 'c'): ?string
+    public function formatStartDate(string $format = 'c'): null|string
     {
         return $this->getStartDate()->format($format);
     }
 
-    /**
-     * @param string $format
-     *
-     * @return null|string
-     */
-    public function formatEndDate(string $format = 'c'): ?string
+    public function formatEndDate(string $format = 'c'): null|string
     {
         return $this->getEndDate()->format($format);
     }

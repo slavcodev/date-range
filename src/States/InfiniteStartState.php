@@ -1,71 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
-use Zee\DateRange\DateRangeException;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
 
 /**
  * State of the range with infinite start.
+ *
+ * @internal
+ *
+ * @psalm-internal Zee\DateRange
  */
 final class InfiniteStartState extends RangeState
 {
-    /**
-     * @var DateTimeInterface
-     */
-    private $endDate;
-
-    /**
-     * @param DateTimeInterface $endDate
-     */
-    public function __construct(DateTimeInterface $endDate)
-    {
-        $this->endDate = $endDate;
+    public function __construct(
+        private readonly DateTimeInterface $endDate,
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasEndDate(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStartDate(): DateTimeInterface
+    public function getStartDate(): never
     {
-        throw new DateRangeException('Range start is undefined');
+        throw new InvalidDateRangeDateRangeException('Range start is undefined');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEndDate(): DateTimeInterface
     {
         return $this->endDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStartDate(DateTimeInterface $start): RangeState
+    public function withStartDate(DateTimeInterface $start): RangeState
     {
         return new FiniteState($start, $this->endDate);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEndDate(DateTimeInterface $end): RangeState
+    public function withEndDate(DateTimeInterface $end): RangeState
     {
-        return new InfiniteStartState($end);
+        return new self($end);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function formatStartDate(string $format = 'c'): ?string
     {
         return null;

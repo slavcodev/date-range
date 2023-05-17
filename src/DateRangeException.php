@@ -8,22 +8,13 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange;
 
-use DomainException;
-use Throwable;
-
 /**
- * Date range exception.
+ * Marker interface.
  */
-final class DateRangeException extends DomainException implements Exception
+interface DateRangeException
 {
-    /**
-     * @param string $message
-     * @param Throwable|null $previous
-     */
-    public function __construct(string $message = 'Invalid data range', Throwable $previous = null)
-    {
-        parent::__construct($message, 0, $previous);
-    }
 }

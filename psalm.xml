@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<psalm
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://getpsalm.org/schema/config"
+  xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+  usePhpDocMethodsWithoutMagicCall="true"
+  allowStringToStandInForClass="true"
+  hoistConstants="true"
+  cacheDirectory="./.build/psalm"
+  autoloader="vendor/autoload.php"
+  findUnusedPsalmSuppress="true"
+  findUnusedBaselineEntry="true"
+  findUnusedCode="true"
+>
+  <projectFiles>
+    <directory name="src"/>
+    <directory name="tests"/>
+    <ignoreFiles>
+      <directory name="vendor"/>
+    </ignoreFiles>
+  </projectFiles>
+
+  <issueHandlers>
+    <UnusedClass errorLevel="suppress"/> <!-- Unwanted in library -->
+    <PossiblyUnusedProperty errorLevel="suppress"/> <!-- Unwanted in library -->
+    <PossiblyUnusedMethod errorLevel="suppress"/> <!-- Unwanted in library -->
+    <PossiblyUnusedReturnValue errorLevel="suppress"/> <!-- Unwanted in library -->
+    <MissingTemplateParam errorLevel="suppress"/> <!-- Unwanted in library -->
+  </issueHandlers>
+
+  <plugins/>
+</psalm>

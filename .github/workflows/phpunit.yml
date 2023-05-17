@@ -1,0 +1,59 @@
+name: phpunit
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.2']
+
+    env:
+      EXECUTE_COVERAGE: ${{ matrix.php-version == '8.2' }}
+      CLOVER_PATH: ".build/clover.xml"
+      COVERAGE_HTML_PATH: ".build/coverage"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+
+      - run: echo "COMPOSER_CACHE_DIR=$(composer config cache-files-dir)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - run: composer install --no-interaction --no-scripts
+
+      - if: env.EXECUTE_COVERAGE == 'true'
+        run: composer run test-code -- --coverage-clover ${{ env.CLOVER_PATH }} --coverage-html ${{ env.COVERAGE_HTML_PATH }}
+
+      - if: env.EXECUTE_COVERAGE != 'true'
+        run: composer run test-code
+
+      - if: env.EXECUTE_COVERAGE == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test Coverage Report
+          path: ${{ env.COVERAGE_HTML_PATH }}
+
+      - if: env.EXECUTE_COVERAGE == 'true'
+        uses: slavcodev/coverage-monitor-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_path: ${{ env.CLOVER_PATH }}
+          threshold_alert: 80
+          threshold_warning: 90

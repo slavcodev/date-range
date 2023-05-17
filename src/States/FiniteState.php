@@ -1,84 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
-use Zee\DateRange\DateRangeException;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
 
 /**
  * State of the finite range.
+ *
+ * @internal
+ *
+ * @psalm-internal Zee\DateRange
  */
 final class FiniteState extends RangeState
 {
-    /**
-     * @var DateTimeInterface
-     */
-    private $startDate;
-
-    /**
-     * @var DateTimeInterface
-     */
-    private $endDate;
-
-    /**
-     * @param DateTimeInterface $startDate
-     * @param DateTimeInterface $endDate
-     */
-    public function __construct(DateTimeInterface $startDate, DateTimeInterface $endDate)
-    {
+    public function __construct(
+        private readonly DateTimeInterface $startDate,
+        private readonly DateTimeInterface $endDate,
+    ) {
         if ($endDate <= $startDate) {
-            throw new DateRangeException('Invalid end date, must be after start');
+            throw new InvalidDateRangeDateRangeException('Invalid end date, must be after start');
         }
-
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasStartDate(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasEndDate(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStartDate(): DateTimeInterface
     {
         return $this->startDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEndDate(): DateTimeInterface
     {
         return $this->endDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStartDate(DateTimeInterface $start): RangeState
+    public function withStartDate(DateTimeInterface $start): RangeState
     {
-        return new FiniteState($start, $this->endDate);
+        return new self($start, $this->endDate);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEndDate(DateTimeInterface $end): RangeState
+    public function withEndDate(DateTimeInterface $end): RangeState
     {
-        return new FiniteState($this->startDate, $end);
+        return new self($this->startDate, $end);
     }
 }

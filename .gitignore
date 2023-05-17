@@ -3,6 +3,15 @@
 # DO NOT add the local environment files, like OS temp files or IDE files.
 # For local environment files use global ignore.
 
+# Ignore all dot-files for security reason except explicitely allowd.
+.*
+!.build
+!.github
+!.editorconfig
+!.gitattributes
+!.gitignore
+!.php-cs-fixer.php
+
 # Composer
 vendor/
 composer.lock

@@ -8,86 +8,71 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
-use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
-use Zee\DateRange\DateRangeException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
+use Zee\DateRange\TestCase;
 
-/**
- * Class UndefinedRangeTest.
- */
+#[CoversClass(UndefinedState::class)]
 final class UndefinedRangeTest extends TestCase
 {
-    /**
-     * @var UndefinedState
-     */
-    private $subject;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    #[Test]
+    public function checkUndefinedState(): void
     {
-        parent::setUp();
-
-        $this->subject = new UndefinedState();
+        $subject = new UndefinedState();
+        $this->assertFalse($subject->hasStartDate());
+        $this->assertFalse($subject->hasEndDate());
+        $this->assertInstanceOf(InfiniteEndState::class, $subject->withStartDate($this->today()));
+        $this->assertInstanceOf(InfiniteStartState::class, $subject->withEndDate($this->today()));
+        $this->assertNull($subject->formatStartDate());
+        $this->assertNull($subject->formatEndDate());
     }
 
-    /**
-     * @test
-     */
-    public function checkUndefinedState()
+    #[Test]
+    public function unavailableStart(): void
     {
-        self::assertFalse($this->subject->hasStartDate());
-        self::assertFalse($this->subject->hasEndDate());
-        self::assertInstanceOf(InfiniteEndState::class, $this->subject->setStartDate(new DateTimeImmutable()));
-        self::assertInstanceOf(InfiniteStartState::class, $this->subject->setEndDate(new DateTimeImmutable()));
-        self::assertNull($this->subject->formatStartDate());
-        self::assertNull($this->subject->formatEndDate());
-    }
+        $subject = new UndefinedState();
 
-    /**
-     * @test
-     */
-    public function unavailableStart()
-    {
-        $this->expectException(DateRangeException::class);
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Range start is undefined');
 
-        $this->subject->getStartDate();
+        $subject->getStartDate();
     }
 
-    /**
-     * @test
-     */
-    public function unavailableEnd()
+    #[Test]
+    public function unavailableEnd(): void
     {
-        $this->expectException(DateRangeException::class);
+        $subject = new UndefinedState();
+
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Range end is undefined');
 
-        $this->subject->getEndDate();
+        $subject->getEndDate();
     }
 
-    /**
-     * @test
-     */
-    public function cannotCompareStartDate()
+    #[Test]
+    public function cannotCompareStartDate(): void
     {
-        $this->expectException(DateRangeException::class);
+        $subject = new UndefinedState();
+
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Range start is undefined');
 
-        $this->subject->compareStartDate(new DateTimeImmutable());
+        $subject->compareStartDate($this->today());
     }
 
-    /**
-     * @test
-     */
-    public function cannotCompareEndDate()
+    #[Test]
+    public function cannotCompareEndDate(): void
     {
-        $this->expectException(DateRangeException::class);
+        $subject = new UndefinedState();
+
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Range end is undefined');
 
-        $this->subject->compareEndDate(new DateTimeImmutable());
+        $subject->compareEndDate($this->today());
     }
 }

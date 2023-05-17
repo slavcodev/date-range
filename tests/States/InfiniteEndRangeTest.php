@@ -8,79 +8,50 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
-use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
-use Zee\DateRange\DateRangeException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
+use Zee\DateRange\TestCase;
 
-/**
- * Class InfiniteEndRangeTest.
- */
+#[CoversClass(InfiniteEndState::class)]
 final class InfiniteEndRangeTest extends TestCase
 {
-    /**
-     * @var FiniteState
-     */
-    private $subject;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $yesterday;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $tomorrow;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    #[Test]
+    public function checkFiniteState(): void
     {
-        parent::setUp();
-
-        $this->yesterday = new DateTimeImmutable('-1 day');
-        $this->tomorrow = new DateTimeImmutable('+1 day');
-        $this->subject = new InfiniteEndState($this->yesterday);
+        $subject = new InfiniteEndState($this->yesterday());
+        $this->assertTrue($subject->hasStartDate());
+        $this->assertFalse($subject->hasEndDate());
+        $this->assertInstanceOf(InfiniteEndState::class, $subject->withStartDate($this->today()));
+        $this->assertInstanceOf(FiniteState::class, $subject->withEndDate($this->today()));
+        $this->assertSame($this->yesterday(), $subject->getStartDate());
+        $this->assertSame(0, $subject->compareStartDate($this->yesterday()));
+        $this->assertSame(-1, $subject->compareStartDate($this->tomorrow()));
+        $this->assertSame($this->yesterday()->format('c'), $subject->formatStartDate());
+        $this->assertNull($subject->formatEndDate());
     }
 
-    /**
-     * @test
-     */
-    public function checkFiniteState()
+    #[Test]
+    public function unavailableEnd(): void
     {
-        self::assertTrue($this->subject->hasStartDate());
-        self::assertFalse($this->subject->hasEndDate());
-        self::assertInstanceOf(InfiniteEndState::class, $this->subject->setStartDate(new DateTimeImmutable()));
-        self::assertInstanceOf(FiniteState::class, $this->subject->setEndDate(new DateTimeImmutable()));
-        self::assertSame($this->yesterday, $this->subject->getStartDate());
-        self::assertSame(0, $this->subject->compareStartDate($this->yesterday));
-        self::assertSame(-1, $this->subject->compareStartDate($this->tomorrow));
-        self::assertSame($this->yesterday->format('c'), $this->subject->formatStartDate());
-        self::assertNull($this->subject->formatEndDate());
-    }
-
-    /**
-     * @test
-     */
-    public function unavailableEnd()
-    {
-        $this->expectException(DateRangeException::class);
+        $subject = new InfiniteEndState($this->yesterday());
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Range end is undefined');
 
-        $this->subject->getEndDate();
+        $subject->getEndDate();
     }
 
-    /**
-     * @test
-     */
-    public function cannotCompareEndDate()
+    #[Test]
+    public function cannotCompareEndDate(): void
     {
-        $this->expectException(DateRangeException::class);
+        $subject = new InfiniteEndState($this->yesterday());
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Range end is undefined');
 
-        $this->subject->compareEndDate(new DateTimeImmutable());
+        $subject->compareEndDate($this->today());
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "zeeproject/date-range",
   "description": "Date range implementation",
-  "license": "BSD-2-Clause",
+  "license": "MIT",
   "homepage": "https://github.com/zee/date-range",
   "keywords": [
     "date range"
@@ -18,15 +18,20 @@
     }
   ],
   "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
     "sort-packages": true
   },
+  "prefer-stable": true,
   "require": {
-    "php": "^7.1",
-    "ext-json": "*"
+    "php": "~8.2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.4",
-    "scrutinizer/ocular": "~1.1"
+    "friendsofphp/php-cs-fixer": "^3.16",
+    "phpunit/phpunit": "^10.1",
+    "psalm/plugin-phpunit": "^0.18.4",
+    "scrutinizer/ocular": "^1.9",
+    "vimeo/psalm": "^5.11"
   },
   "autoload": {
     "psr-4": {
@@ -39,12 +44,20 @@
     }
   },
   "scripts": {
-    "check": [
-      "@test"
+    "test-code": "phpunit --testdox --colors=always",
+    "test-coverage": "@test-code --coverage-clover build/logs/clover.xml",
+    "show-coverage": "@test-coverage --coverage-text=php://stdout",
+    "fix-cs": "php-cs-fixer fix -v --ansi",
+    "test-cs": "@fix-cs --dry-run",
+    "test-sca": "psalm --find-dead-code=always --show-info=false",
+    "lint": [
+      "@test-cs",
+      "@test-sca"
     ],
-    "test": "phpunit",
-    "test-coverage": "phpunit --coverage-clover build/logs/clover.xml",
-    "show-coverage": "phpunit --coverage-clover build/logs/clover.xml --coverage-text=php://stdout"
+    "test": [
+      "@test-lint",
+      "@test-code"
+    ]
   },
   "extra": {
     "branch-alias": {

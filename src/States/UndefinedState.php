@@ -1,59 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
 use DateTimeInterface;
-use Zee\DateRange\DateRangeException;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
 
 /**
  * State of the undefined range.
+ *
+ * @internal
+ *
+ * @psalm-internal Zee\DateRange
  */
 final class UndefinedState extends RangeState
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getStartDate(): DateTimeInterface
+    public function getStartDate(): never
     {
-        throw new DateRangeException('Range start is undefined');
+        throw new InvalidDateRangeDateRangeException('Range start is undefined');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndDate(): DateTimeInterface
+    public function getEndDate(): never
     {
-        throw new DateRangeException('Range end is undefined');
+        throw new InvalidDateRangeDateRangeException('Range end is undefined');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStartDate(DateTimeInterface $start): RangeState
+    public function withStartDate(DateTimeInterface $start): RangeState
     {
         return new InfiniteEndState($start);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEndDate(DateTimeInterface $end): RangeState
+    public function withEndDate(DateTimeInterface $end): RangeState
     {
         return new InfiniteStartState($end);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function formatStartDate(string $format = 'c'): ?string
+    public function formatStartDate(string $format = 'c'): null|string
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function formatEndDate(string $format = 'c'): ?string
+    public function formatEndDate(string $format = 'c'): null|string
     {
         return null;
     }

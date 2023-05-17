@@ -1,13 +1,28 @@
 # Date Range
 
-[![Build Status][ico-travis]][link-travis]
+[ico-tests-status]: https://github.com/zee/date-range/workflows/phpunit/badge.svg
+[link-github]: https://github.com/zee/date-range
+
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/zee/date-range.svg?logo=scrutinizer
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/zee/date-range.svg?logo=scrutinizer
+[link-scrutinizer]: https://scrutinizer-ci.com/g/zee/date-range/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/zee/date-range
+
+[ico-issues]: https://img.shields.io/github/issues/zee/date-range.svg?logo=github
+[link-issues]: https://github.com/zee/date-range/issues
+
+[ico-license]: https://img.shields.io/github/license/zee/date-range
+[link-license]: LICENSE
+
+[ico-version]: https://img.shields.io/packagist/v/zeeproject/date-range.svg?label=Latest
+[link-packagist]: https://packagist.org/packages/zeeproject/date-range
+
+[![Tests status][ico-tests-status]][link-github]
 [![Code Coverage][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![GitHub issues][ico-issues]][link-issues]
-
 [![Software License][ico-license]][link-license]
 [![Latest Version on Packagist][ico-version]][link-packagist]
-[![PHP Version][ico-php-version]][link-github]
 
 Implementation of the **Date Range** missing in PHP.
 
@@ -105,9 +120,6 @@ class RangeForYear implements DateRangeProvider
         $this->year = $year;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDateRange(): DateRangeInterface
     {
         return new DateRange(
@@ -155,20 +167,4 @@ phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for more details.
-
-[ico-version]: https://img.shields.io/packagist/v/zeeproject/date-range.svg?style=for-the-badge&label=Latest
-[ico-php-version]: https://img.shields.io/packagist/php-v/zeeproject/date-range.svg?style=for-the-badge
-[ico-license]: https://img.shields.io/badge/License-BSD%202--Clause-blue.svg?style=for-the-badge
-[ico-issues]: https://img.shields.io/github/issues/zee/date-range.svg?style=for-the-badge&logo=github
-[ico-travis]: https://img.shields.io/travis/zee/date-range.svg?style=for-the-badge&logo=travis
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/zee/date-range.svg?style=for-the-badge&logo=scrutinizer
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/zee/date-range.svg?style=for-the-badge&logo=scrutinizer
-
-[link-packagist]: https://packagist.org/packages/zeeproject/date-range
-[link-github]: https://github.com/zee/date-range
-[link-issues]: https://github.com/zee/date-range/issues
-[link-license]: LICENSE
-[link-travis]: https://travis-ci.org/zee/date-range
-[link-scrutinizer]: https://scrutinizer-ci.com/g/zee/date-range/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/zee/date-range
+Please see [CONTRIBUTING](.github/CONTRIBUTING.md) and [CODE OF CONDUCT](.github/CODE_OF_CONDUCT.md) for more details.

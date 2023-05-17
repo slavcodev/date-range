@@ -8,82 +8,51 @@
  * @see https://github.com/zee/
  */
 
+declare(strict_types=1);
+
 namespace Zee\DateRange\States;
 
-use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
-use Zee\DateRange\DateRangeException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Zee\DateRange\InvalidDateRangeDateRangeException;
+use Zee\DateRange\TestCase;
 
-/**
- * Class FiniteRangeTest.
- */
+#[CoversClass(FiniteState::class)]
 final class FiniteRangeTest extends TestCase
 {
-    /**
-     * @var FiniteState
-     */
-    private $subject;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $yesterday;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $tomorrow;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    #[Test]
+    public function checkFiniteState(): void
     {
-        parent::setUp();
-
-        $this->yesterday = new DateTimeImmutable('-1 day');
-        $this->tomorrow = new DateTimeImmutable('+1 day');
-        $this->subject = new FiniteState($this->yesterday, $this->tomorrow);
+        $subject = new FiniteState($this->yesterday(), $this->tomorrow());
+        $this->assertTrue($subject->hasStartDate());
+        $this->assertTrue($subject->hasEndDate());
+        $this->assertInstanceOf(FiniteState::class, $subject->withStartDate($this->today()));
+        $this->assertInstanceOf(FiniteState::class, $subject->withEndDate($this->today()));
+        $this->assertSame($this->yesterday(), $subject->getStartDate());
+        $this->assertSame($this->tomorrow(), $subject->getEndDate());
+        $this->assertSame(0, $subject->compareStartDate($this->yesterday()));
+        $this->assertSame(0, $subject->compareEndDate($this->tomorrow()));
+        $this->assertSame(-1, $subject->compareStartDate($this->tomorrow()));
+        $this->assertSame(1, $subject->compareEndDate($this->yesterday()));
+        $this->assertSame($this->yesterday()->format('c'), $subject->formatStartDate());
+        $this->assertSame($this->tomorrow()->format('c'), $subject->formatEndDate());
     }
 
-    /**
-     * @test
-     */
-    public function checkFiniteState()
+    #[Test]
+    public function guardRangeSequence(): void
     {
-        self::assertTrue($this->subject->hasStartDate());
-        self::assertTrue($this->subject->hasEndDate());
-        self::assertInstanceOf(FiniteState::class, $this->subject->setStartDate(new DateTimeImmutable()));
-        self::assertInstanceOf(FiniteState::class, $this->subject->setEndDate(new DateTimeImmutable()));
-        self::assertSame($this->yesterday, $this->subject->getStartDate());
-        self::assertSame($this->tomorrow, $this->subject->getEndDate());
-        self::assertSame(0, $this->subject->compareStartDate($this->yesterday));
-        self::assertSame(0, $this->subject->compareEndDate($this->tomorrow));
-        self::assertSame(-1, $this->subject->compareStartDate($this->tomorrow));
-        self::assertSame(1, $this->subject->compareEndDate($this->yesterday));
-        self::assertSame($this->yesterday->format('c'), $this->subject->formatStartDate());
-        self::assertSame($this->tomorrow->format('c'), $this->subject->formatEndDate());
-    }
-
-    /**
-     * @test
-     */
-    public function guardRangeSequence()
-    {
-        $this->expectException(DateRangeException::class);
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Invalid end date, must be after start');
 
-        new FiniteState($this->tomorrow, $this->yesterday);
+        new FiniteState($this->tomorrow(), $this->yesterday());
     }
 
-    /**
-     * @test
-     */
-    public function guardRangeDatesDifference()
+    #[Test]
+    public function guardRangeDatesDifference(): void
     {
-        $this->expectException(DateRangeException::class);
+        $this->expectException(InvalidDateRangeDateRangeException::class);
         $this->expectExceptionMessage('Invalid end date, must be after start');
 
-        new FiniteState($this->tomorrow, $this->tomorrow);
+        new FiniteState($this->tomorrow(), $this->tomorrow());
     }
 }
