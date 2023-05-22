@@ -31,7 +31,7 @@
     "phpunit/phpunit": "^10.1",
     "psalm/plugin-phpunit": "^0.18.4",
     "scrutinizer/ocular": "^1.9",
-    "vimeo/psalm": "^5.11"
+    "vimeo/psalm": "^5.12"
   },
   "autoload": {
     "psr-4": {
