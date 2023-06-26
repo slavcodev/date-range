@@ -27,7 +27,7 @@
     "php": "~8.2.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.18",
+    "friendsofphp/php-cs-fixer": "^3.19",
     "phpunit/phpunit": "^10.2",
     "psalm/plugin-phpunit": "^0.18.4",
     "scrutinizer/ocular": "^1.9",
