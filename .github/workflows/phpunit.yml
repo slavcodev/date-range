@@ -50,7 +50,7 @@ jobs:
           name: Test Coverage Report
           path: ${{ env.COVERAGE_HTML_PATH }}
 
-      - if: env.EXECUTE_COVERAGE == 'true'
+      - if: github.event_name == 'pull_request' && ! contains(github.event.pull_request.user.login, 'dependabot[bot]') && env.EXECUTE_COVERAGE == 'true'
         uses: slavcodev/coverage-monitor-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
