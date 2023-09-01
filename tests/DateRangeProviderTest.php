@@ -25,7 +25,7 @@ final class DateRangeProviderTest extends TestCase
     {
         $yesterday = new DateTimeImmutable('-1 day');
         $tomorrow = new DateTimeImmutable('+1 day');
-        $calculator = fn (FiniteDateRangeProvider $dateRangeProvider): int => (int) $dateRangeProvider->getDateRange()->getDateInterval()->days;
+        $calculator = static fn (FiniteDateRangeProvider $dateRangeProvider): int => (int) $dateRangeProvider->getDateRange()->getDateInterval()->days;
 
         $dateRangeProvider = new FiniteDateRangeProvider($yesterday, $tomorrow);
         $result = $calculator($dateRangeProvider);
