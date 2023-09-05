@@ -20,7 +20,7 @@ jobs:
       COVERAGE_HTML_PATH: ".build/coverage"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: shivammathur/setup-php@v2
         with:
