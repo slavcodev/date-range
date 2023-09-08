@@ -25,8 +25,7 @@ final readonly class FiniteDateRangeProvider implements DateRangeProvider
     public function __construct(
         private DateTimeInterface $startDate,
         private DateTimeInterface $endDate,
-    ) {
-    }
+    ) {}
 
     public function getDateRange(): DateRangeInterface
     {
