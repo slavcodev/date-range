@@ -18,8 +18,7 @@ final class InfiniteEndState extends RangeState
 {
     public function __construct(
         private readonly DateTimeInterface $startDate,
-    ) {
-    }
+    ) {}
 
     public function hasStartDate(): bool
     {

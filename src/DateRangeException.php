@@ -15,6 +15,4 @@ namespace Zee\DateRange;
 /**
  * Marker interface.
  */
-interface DateRangeException
-{
-}
+interface DateRangeException {}
