@@ -49,6 +49,8 @@ final class DateRange implements DateRangeInterface, JsonSerializable
 
     /**
      * Returns string representation of range.
+     *
+     * @psalm-suppress RiskyTruthyFalsyComparison
      */
     public function __toString(): string
     {

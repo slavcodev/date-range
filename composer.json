@@ -24,14 +24,12 @@
   },
   "prefer-stable": true,
   "require": {
-    "php": "~8.2.0"
+    "php": "~8.2.0 || ~8.3.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.49",
-    "phpunit/phpunit": "^10.5",
-    "psalm/plugin-phpunit": "^0.18.4",
-    "scrutinizer/ocular": "^1.9",
-    "vimeo/psalm": "^5.22"
+    "php-cs-fixer/shim": "^3.50",
+    "phpunit/phpunit": "^11.0.3",
+    "psalm/phar": "^5.22"
   },
   "autoload": {
     "psr-4": {
@@ -49,7 +47,7 @@
     "show-coverage": "@test-coverage --coverage-text=php://stdout",
     "fix-cs": "php-cs-fixer fix -v --ansi",
     "test-cs": "@fix-cs --dry-run",
-    "test-sca": "psalm --find-dead-code=always --show-info=false",
+    "test-sca": "psalm.phar --find-dead-code=always --show-info=false",
     "lint": [
       "@test-cs",
       "@test-sca"
