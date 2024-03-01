@@ -50,7 +50,7 @@ final class InfiniteEndState extends RangeState
         return new FiniteState($this->startDate, $end);
     }
 
-    public function formatEndDate(string $format = 'c'): ?string
+    public function formatEndDate(string $format = 'c'): null|string
     {
         return null;
     }
