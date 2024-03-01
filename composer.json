@@ -28,7 +28,7 @@
   },
   "require-dev": {
     "php-cs-fixer/shim": "^3.51",
-    "phpunit/phpunit": "^11.0.3",
+    "phpunit/phpunit": "^11.0.4",
     "psalm/phar": "^5.22"
   },
   "autoload": {

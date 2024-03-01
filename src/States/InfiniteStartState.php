@@ -45,7 +45,7 @@ final class InfiniteStartState extends RangeState
         return new self($end);
     }
 
-    public function formatStartDate(string $format = 'c'): ?string
+    public function formatStartDate(string $format = 'c'): null|string
     {
         return null;
     }
