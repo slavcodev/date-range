@@ -27,7 +27,7 @@
     "php": "~8.2.0 || ~8.3.0"
   },
   "require-dev": {
-    "php-cs-fixer/shim": "^3.65",
+    "php-cs-fixer/shim": "^3.67",
     "phpunit/phpunit": "^11.5.0",
     "psalm/phar": "^5.26"
   },
